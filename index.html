@@ -1,13 +1,55 @@
 <!DOCTYPE html>
-<!-- thebookkpr.github.io front door — index.html V1.0 · Part 1 of 1 -->
+<!-- thebookkpr.github.io front door — index.html V1.1 · Part 1 of 1
+     V1.1: instant redirect removed; now a small landing page with a link into the library.
+     V1.0: instant redirect to games/. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0;URL=games/">
-  <title>The Book Keeper's Library</title>
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#120a07">
+  <title>The Book Keeper</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.4em;
+      padding: 24px;
+      text-align: center;
+      color: #f1e4c3;
+      font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+      background: radial-gradient(ellipse at 50% 30%, #4a2c1a 0%, #1a0f0a 70%);
+    }
+    h1 {
+      margin: 0;
+      font-weight: normal;
+      font-size: clamp(1.6rem, 6vw, 3rem);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #f0d58a;
+      text-shadow: 0 0 20px rgba(217, 180, 95, 0.55);
+    }
+    p { margin: 0; font-style: italic; }
+    a {
+      padding: 0.6em 1.6em;
+      color: #f0d58a;
+      text-decoration: none;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      border: 1px solid #d9b45f;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.25);
+    }
+    a:hover, a:focus-visible { box-shadow: 0 0 20px rgba(217, 180, 95, 0.55); outline: none; }
+  </style>
 </head>
 <body>
-  <p><a href="games/">Enter The Book Keeper's Library</a></p>
+  <h1>The Book Keeper</h1>
+  <p>Storybook worlds, kept with care.</p>
+  <a href="games/">Enter the Library</a>
 </body>
 </html>
