@@ -1,4 +1,4 @@
-/* The Book Keeper Front Door: effects.css V1.1 · Part 1 of 1 */
+/* The Book Keeper Front Door: effects.css V1.2 · Part 1 of 1 */
 
 /* Stacking: scene (0), vignette (1), text and button (2) */
 .threshold-header,
@@ -15,8 +15,8 @@ body::before {
   z-index: 1;
   pointer-events: none;
   background:
-    linear-gradient(to bottom, rgba(26, 15, 10, 0.55) 0%, rgba(26, 15, 10, 0) 28%),
-    linear-gradient(to top, rgba(26, 15, 10, 0.6) 0%, rgba(26, 15, 10, 0) 25%);
+    linear-gradient(to bottom, rgba(var(--vignette-rgb), 0.55) 0%, rgba(var(--vignette-rgb), 0) 28%),
+    linear-gradient(to top, rgba(var(--vignette-rgb), 0.6) 0%, rgba(var(--vignette-rgb), 0) 25%);
 }
 
 /* Effect layers sit on the painting and never block taps */
@@ -25,12 +25,13 @@ body::before {
 .sky-shimmer,
 .haze,
 .fireflies,
-.gold-dust {
+.gold-dust,
+.snow {
   position: absolute;
   pointer-events: none;
 }
 
-/* Lantern glow: a soft warm pulse over the three lanterns */
+/* Lantern glow: a soft warm pulse over the four lights (three lanterns and the window) */
 .lantern {
   width: 15%;
   aspect-ratio: 1;
@@ -41,9 +42,10 @@ body::before {
   animation: lantern-pulse var(--lantern-pulse-duration) ease-in-out infinite;
 }
 
-.lantern-1 { left: 90.6%; top: 20.2%; }
-.lantern-2 { left: 28.5%; top: 39.6%; animation-delay: -1.7s; }
-.lantern-3 { left: 20.7%; top: 67.2%; animation-delay: -3.3s; }
+.lantern-1 { left: var(--lantern-1-x); top: var(--lantern-1-y); }
+.lantern-2 { left: var(--lantern-2-x); top: var(--lantern-2-y); animation-delay: -1.7s; }
+.lantern-3 { left: var(--lantern-3-x); top: var(--lantern-3-y); animation-delay: -3.3s; }
+.lantern-4 { left: var(--lantern-4-x); top: var(--lantern-4-y); width: 10%; animation-delay: -0.8s; }
 
 @keyframes lantern-pulse {
   0%, 100% { opacity: 0.55; }
@@ -52,10 +54,10 @@ body::before {
 
 /* Door glow: golden light breathing around the round door */
 .door-glow {
-  left: 32.5%;
-  top: 40%;
-  width: 45.5%;
-  height: 20.5%;
+  left: var(--door-glow-x);
+  top: var(--door-glow-y);
+  width: var(--door-glow-w);
+  height: var(--door-glow-h);
   border-radius: 50%;
   background: radial-gradient(ellipse closest-side, rgba(215, 180, 106, 0) 70%, var(--door-glow) 90%, rgba(215, 180, 106, 0) 100%);
   animation: door-breathe 7s ease-in-out infinite;
@@ -181,6 +183,38 @@ body:has(.door-link:active) .door-glow::after {
   100% { opacity: 0; transform: translate(24px, 120px); }
 }
 
+/* Snow: gentle flakes falling over the whole screen (winter only).
+   js/season.js creates the flakes and sets each one's size, speed and drift. */
+.snow {
+  inset: 0;
+}
+
+.snow span {
+  position: absolute;
+  top: -10px;
+  left: var(--x);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: var(--snowflake-color);
+  box-shadow: 0 0 6px 1px var(--snowflake-glow);
+  opacity: var(--flake-opacity);
+  animation: snow-fall var(--dur) linear var(--delay) infinite;
+}
+
+@keyframes snow-fall {
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(calc(var(--drift) * -0.6), 55svh); }
+  100% { transform: translate(var(--drift), 110svh); }
+}
+
+/* Winter: drop the summer lights, the snow takes their place */
+:root[data-season="winter"] .fireflies,
+:root[data-season="winter"] .gold-dust,
+:root[data-season="winter"] .sky-shimmer {
+  display: none;
+}
+
 /* Hover and touch: the lantern-warm lift from the Website Canon */
 .enter-library {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -216,5 +250,6 @@ main              { animation: threshold-fade 1.4s ease-out 0.6s both; }
   .enter-library,
   .door-glow::after { transition: none; }
   .fireflies,
-  .gold-dust { display: none; }
+  .gold-dust,
+  .snow { display: none; }
 }
