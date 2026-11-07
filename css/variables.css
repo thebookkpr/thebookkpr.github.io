@@ -1,4 +1,4 @@
-/* The Book Keeper Front Door: variables.css V1.0 · Part 1 of 1 */
+/* The Book Keeper Front Door: variables.css V1.1 · Part 1 of 1 */
 
 :root {
   /* Theme Canon v2.0 palette */
@@ -12,7 +12,9 @@
   /* Page */
   --page-bg-image: url("../images/thebookkeeper-bg.jpg");
   --page-bg-fallback: #1a0f0a;
-  --background-position: 50% 55%;
+  --scene-x: 50%;
+  --scene-y: 55%;
+  --scene-ratio: 0.45;
 
   /* Text */
   --text-color: var(--parchment);
@@ -33,4 +35,13 @@
   --page-padding: 24px;
   --top-offset: 8svh;
   --bottom-offset: 9svh;
+
+  /* Effects (V1.1) */
+  --lantern-glow: rgba(255, 190, 90, 0.55);
+  --lantern-pulse-duration: 5s;
+  --door-glow: rgba(215, 180, 106, 0.45);
+  --door-glow-bright: rgba(215, 180, 106, 0.75);
+  --firefly-color: #F0D58A;
+  --haze-color: rgba(238, 230, 210, 0.12);
+  --haze-duration: 70s;
 }
