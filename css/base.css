@@ -1,0 +1,68 @@
+/* The Book Keeper Front Door: base.css V1.0 · Part 1 of 1 */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100svh;
+  padding: var(--top-offset) var(--page-padding) var(--bottom-offset);
+  text-align: center;
+  color: var(--text-color);
+  font-family: var(--font-serif);
+  background-color: var(--page-bg-fallback);
+  background-image: var(--page-bg-image);
+  background-size: cover;
+  background-position: var(--background-position);
+  background-repeat: no-repeat;
+}
+
+/* Title block: sits in the sky */
+.threshold-header {
+  max-width: 28rem;
+}
+
+h1 {
+  margin: 0 0 0.4em;
+  font-weight: normal;
+  font-size: clamp(1.6rem, 7vw, 3rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--heading-color);
+  text-shadow: var(--text-shadow-soft), var(--text-shadow-glow);
+}
+
+.threshold-tagline {
+  margin: 0;
+  font-style: italic;
+  font-size: clamp(1rem, 4vw, 1.25rem);
+  text-shadow: var(--text-shadow-soft);
+}
+
+/* Enter the Library: sits on the path */
+.enter-library {
+  display: inline-block;
+  padding: 0.75em 1.8em;
+  min-height: 44px;
+  color: var(--heading-color);
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-shadow: var(--text-shadow-soft);
+  background: var(--button-bg);
+  border: 1px solid var(--button-border);
+  border-radius: var(--button-radius);
+}
+
+.enter-library:focus-visible {
+  outline: 2px solid var(--parchment);
+  outline-offset: 4px;
+}
