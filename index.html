@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!-- thebookkpr.github.io front door — index.html V1.2 · Part 1 of 1
-     V1.2: inline styles replaced by css/variables.css, css/base.css and css/effects.css;
-           painted background (images/thebookkeeper-bg.jpg) set in variables.css.
+<!-- thebookkpr.github.io front door — index.html V1.3 · Part 1 of 1
+     V1.3: painted scene layer added, with effects (lanterns, door glow, fireflies, dust, haze) and a tappable door.
+     V1.2: inline styles replaced by css/variables.css, css/base.css and css/effects.css.
      V1.1: instant redirect removed; small landing page with a link into the library.
      V1.0: instant redirect to games/.
      Lives at the root of the thebookkpr.github.io repository. -->
@@ -22,13 +22,55 @@
 </head>
 <body>
 
+  <!-- Scene: the painting, with its effects and the door link -->
+  <div class="scene">
+    <div class="scene-art">
+
+      <!-- Sky and mist -->
+      <div class="sky-shimmer"></div>
+      <div class="haze"></div>
+
+      <!-- Light -->
+      <div class="door-glow"></div>
+      <div class="lantern lantern-1"></div>
+      <div class="lantern lantern-2"></div>
+      <div class="lantern lantern-3"></div>
+
+      <!-- Tiny lights -->
+      <div class="fireflies" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="gold-dust" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <!-- The round green door, tappable -->
+      <a class="door-link" href="./stories/" aria-label="Enter the Library through the round green door"></a>
+
+    </div>
+  </div>
+
   <!-- Title: sits in the sky -->
   <header class="threshold-header">
     <h1>The Book Keeper</h1>
     <p class="threshold-tagline">Storybook worlds, kept with care.</p>
   </header>
 
-  <!-- Entrance: sits on the stone path -->
+  <!-- Entrance: sits on the path -->
   <main>
     <a class="enter-library" href="./stories/">Enter the Library</a>
   </main>
