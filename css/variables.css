@@ -1,0 +1,36 @@
+/* The Book Keeper Front Door: variables.css V1.0 · Part 1 of 1 */
+
+:root {
+  /* Theme Canon v2.0 palette */
+  --round-door-green: #496A46;
+  --mosswood: #6C5640;
+  --warm-oak: #A68056;
+  --parchment: #EEE6D2;
+  --firelight-gold: #D7B46A;
+  --tea-brown: #4C3828;
+
+  /* Page */
+  --page-bg-image: url("../images/thebookkeeper-bg.jpg");
+  --page-bg-fallback: #1a0f0a;
+  --background-position: 50% 55%;
+
+  /* Text */
+  --text-color: var(--parchment);
+  --heading-color: var(--firelight-gold);
+  --text-shadow-soft: 0 2px 12px rgba(40, 24, 12, 0.85);
+  --text-shadow-glow: 0 0 18px rgba(215, 180, 106, 0.55);
+
+  /* Type */
+  --font-serif: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+
+  /* Button */
+  --button-bg: rgba(76, 56, 40, 0.72);
+  --button-border: var(--firelight-gold);
+  --button-radius: 8px;
+  --button-glow: 0 0 22px rgba(215, 180, 106, 0.6);
+
+  /* Layout */
+  --page-padding: 24px;
+  --top-offset: 8svh;
+  --bottom-offset: 9svh;
+}
