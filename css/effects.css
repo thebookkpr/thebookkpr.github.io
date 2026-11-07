@@ -1,21 +1,184 @@
-/* The Book Keeper Front Door: effects.css V1.0 · Part 1 of 1 */
+/* The Book Keeper Front Door: effects.css V1.1 · Part 1 of 1 */
+
+/* Stacking: scene (0), vignette (1), text and button (2) */
+.threshold-header,
+main {
+  position: relative;
+  z-index: 2;
+}
 
 /* Soft vignette so text stays readable over the painting */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: 1;
   pointer-events: none;
   background:
     linear-gradient(to bottom, rgba(26, 15, 10, 0.55) 0%, rgba(26, 15, 10, 0) 28%),
     linear-gradient(to top, rgba(26, 15, 10, 0.6) 0%, rgba(26, 15, 10, 0) 25%);
 }
 
-.threshold-header,
-.enter-library {
-  position: relative;
-  z-index: 1;
+/* Effect layers sit on the painting and never block taps */
+.lantern,
+.door-glow,
+.sky-shimmer,
+.haze,
+.fireflies,
+.gold-dust {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Lantern glow: a soft warm pulse over the three lanterns */
+.lantern {
+  width: 15%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--lantern-glow) 0%, rgba(255, 190, 90, 0) 65%);
+  mix-blend-mode: screen;
+  animation: lantern-pulse var(--lantern-pulse-duration) ease-in-out infinite;
+}
+
+.lantern-1 { left: 90.6%; top: 20.2%; }
+.lantern-2 { left: 28.5%; top: 39.6%; animation-delay: -1.7s; }
+.lantern-3 { left: 20.7%; top: 67.2%; animation-delay: -3.3s; }
+
+@keyframes lantern-pulse {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+/* Door glow: golden light breathing around the round door */
+.door-glow {
+  left: 32.5%;
+  top: 40%;
+  width: 45.5%;
+  height: 20.5%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse closest-side, rgba(215, 180, 106, 0) 70%, var(--door-glow) 90%, rgba(215, 180, 106, 0) 100%);
+  animation: door-breathe 7s ease-in-out infinite;
+}
+
+@keyframes door-breathe {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+}
+
+/* Brighter ring when the visitor reaches for the door or the button */
+.door-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(ellipse closest-side, rgba(215, 180, 106, 0) 60%, var(--door-glow-bright) 90%, rgba(215, 180, 106, 0) 100%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+body:has(.enter-library:hover) .door-glow::after,
+body:has(.enter-library:focus-visible) .door-glow::after,
+body:has(.enter-library:active) .door-glow::after,
+body:has(.door-link:hover) .door-glow::after,
+body:has(.door-link:focus-visible) .door-glow::after,
+body:has(.door-link:active) .door-glow::after {
+  opacity: 1;
+}
+
+/* Sky shimmer: the sunset glow breathes very slightly */
+.sky-shimmer {
+  left: 15%;
+  top: 3%;
+  width: 70%;
+  height: 16%;
+  background: radial-gradient(ellipse, rgba(255, 200, 140, 0.35) 0%, rgba(255, 200, 140, 0) 70%);
+  mix-blend-mode: screen;
+  animation: sky-shimmer 12s ease-in-out infinite;
+}
+
+@keyframes sky-shimmer {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.9; }
+}
+
+/* Evening haze: slow mist drifting across the path */
+.haze {
+  left: -20%;
+  top: 58%;
+  width: 140%;
+  height: 38%;
+  background:
+    radial-gradient(ellipse at 30% 50%, var(--haze-color), rgba(238, 230, 210, 0) 60%),
+    radial-gradient(ellipse at 70% 60%, var(--haze-color), rgba(238, 230, 210, 0) 60%);
+  animation: haze-drift var(--haze-duration) ease-in-out infinite alternate;
+}
+
+@keyframes haze-drift {
+  from { transform: translateX(-6%); }
+  to   { transform: translateX(6%); }
+}
+
+/* Fireflies and gold dust: tiny lights, positioned on the painting */
+.fireflies,
+.gold-dust {
+  inset: 0;
+}
+
+.fireflies span,
+.gold-dust span {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.fireflies span {
+  width: 6px;
+  height: 6px;
+  background: var(--firefly-color);
+  box-shadow: 0 0 10px 3px rgba(240, 213, 138, 0.7);
+  animation: firefly-drift 10s ease-in-out infinite;
+}
+
+.fireflies span:nth-child(1) { left: 42%; top: 78%; animation-delay: 0s; }
+.fireflies span:nth-child(2) { left: 60%; top: 84%; animation-delay: -2s; animation-duration: 12s; }
+.fireflies span:nth-child(3) { left: 28%; top: 58%; animation-delay: -4s; }
+.fireflies span:nth-child(4) { left: 74%; top: 70%; animation-delay: -6s; animation-duration: 11s; }
+.fireflies span:nth-child(5) { left: 48%; top: 92%; animation-delay: -3s; }
+.fireflies span:nth-child(6) { left: 14%; top: 80%; animation-delay: -7s; animation-duration: 13s; }
+.fireflies span:nth-child(7) { left: 84%; top: 54%; animation-delay: -5s; }
+.fireflies span:nth-child(8) { left: 36%; top: 66%; animation-delay: -8s; animation-duration: 12s; }
+
+@keyframes firefly-drift {
+  0%   { opacity: 0; transform: translate(0, 0); }
+  20%  { opacity: 1; }
+  50%  { opacity: 0.3; transform: translate(18px, -40px); }
+  80%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(-12px, -90px); }
+}
+
+.gold-dust span {
+  width: 3px;
+  height: 3px;
+  background: var(--firelight-gold);
+  box-shadow: 0 0 4px rgba(215, 180, 106, 0.8);
+  animation: dust-fall 16s linear infinite;
+}
+
+.gold-dust span:nth-child(1) { left: 12%; top: 10%; animation-delay: 0s; }
+.gold-dust span:nth-child(2) { left: 30%; top: 24%; animation-delay: -3s; }
+.gold-dust span:nth-child(3) { left: 55%; top: 8%;  animation-delay: -6s; }
+.gold-dust span:nth-child(4) { left: 78%; top: 30%; animation-delay: -9s; }
+.gold-dust span:nth-child(5) { left: 22%; top: 46%; animation-delay: -12s; }
+.gold-dust span:nth-child(6) { left: 66%; top: 50%; animation-delay: -2s; }
+.gold-dust span:nth-child(7) { left: 88%; top: 14%; animation-delay: -5s; }
+.gold-dust span:nth-child(8) { left: 44%; top: 36%; animation-delay: -8s; }
+
+@keyframes dust-fall {
+  0%   { opacity: 0; transform: translate(0, 0); }
+  15%  { opacity: 0.8; }
+  85%  { opacity: 0.8; }
+  100% { opacity: 0; transform: translate(24px, 120px); }
 }
 
 /* Hover and touch: the lantern-warm lift from the Website Canon */
@@ -33,17 +196,25 @@ body::before {
   transform: translateY(-2px);
 }
 
-/* Gentle arrival */
+/* Gentle arrival (on the wrappers, so the button's lift still works) */
 @keyframes threshold-fade {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 .threshold-header { animation: threshold-fade 1.4s ease-out both; }
-.enter-library    { animation: threshold-fade 1.4s ease-out 0.6s both; }
+main              { animation: threshold-fade 1.4s ease-out 0.6s both; }
 
+/* Reduced motion: keep the soft static glows, drop everything that moves */
 @media (prefers-reduced-motion: reduce) {
   .threshold-header,
-  .enter-library { animation: none; }
-  .enter-library { transition: none; }
+  main,
+  .lantern,
+  .door-glow,
+  .sky-shimmer,
+  .haze { animation: none; }
+  .enter-library,
+  .door-glow::after { transition: none; }
+  .fireflies,
+  .gold-dust { display: none; }
 }
