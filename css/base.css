@@ -1,4 +1,4 @@
-/* The Book Keeper Front Door: base.css V1.0 · Part 1 of 1 */
+/* The Book Keeper Front Door: base.css V1.1 · Part 1 of 1 */
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -18,10 +18,44 @@ body {
   color: var(--text-color);
   font-family: var(--font-serif);
   background-color: var(--page-bg-fallback);
+}
+
+/* Scene: the painting, fixed behind everything */
+.scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background-color: var(--page-bg-fallback);
+}
+
+/* The painting, sized like "cover" so effects can sit on it by percentage */
+.scene-art {
+  --art-w: max(100vw, calc(100svh * var(--scene-ratio)));
+  --art-h: max(100svh, calc(100vw / var(--scene-ratio)));
+  position: absolute;
+  left: var(--scene-x);
+  top: var(--scene-y);
+  width: var(--art-w);
+  height: var(--art-h);
+  transform: translate(calc(-1 * var(--scene-x)), calc(-1 * var(--scene-y)));
   background-image: var(--page-bg-image);
-  background-size: cover;
-  background-position: var(--background-position);
-  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+/* The round green door as a link (placed over the door in the painting) */
+.door-link {
+  position: absolute;
+  left: 34.9%;
+  top: 41.1%;
+  width: 40.6%;
+  height: 18.4%;
+  border-radius: 50%;
+}
+
+.door-link:focus-visible {
+  outline: 2px solid var(--parchment);
+  outline-offset: 4px;
 }
 
 /* Title block: sits in the sky */
