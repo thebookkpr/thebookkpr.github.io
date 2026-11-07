@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<!-- thebookkpr.github.io front door — index.html V1.3 · Part 1 of 1
+<!-- thebookkpr.github.io front door — index.html V1.4 · Part 1 of 1
+     V1.4: winter painting and snowfall in January and February (js/season.js); fourth lantern for the window.
      V1.3: painted scene layer added, with effects (lanterns, door glow, fireflies, dust, haze) and a tappable door.
      V1.2: inline styles replaced by css/variables.css, css/base.css and css/effects.css.
      V1.1: instant redirect removed; small landing page with a link into the library.
@@ -19,6 +20,9 @@
   <link rel="stylesheet" href="./css/variables.css">
   <link rel="stylesheet" href="./css/base.css">
   <link rel="stylesheet" href="./css/effects.css">
+
+  <!-- Season: sets summer or winter before the page paints -->
+  <script src="./js/season.js"></script>
 </head>
 <body>
 
@@ -35,8 +39,9 @@
       <div class="lantern lantern-1"></div>
       <div class="lantern lantern-2"></div>
       <div class="lantern lantern-3"></div>
+      <div class="lantern lantern-4"></div>
 
-      <!-- Tiny lights -->
+      <!-- Tiny lights (summer) -->
       <div class="fireflies" aria-hidden="true">
         <span></span>
         <span></span>
@@ -62,6 +67,9 @@
       <a class="door-link" href="./stories/" aria-label="Enter the Library through the round green door"></a>
 
     </div>
+
+    <!-- Snow (winter only): flakes are created by js/season.js -->
+    <div class="snow" aria-hidden="true"></div>
   </div>
 
   <!-- Title: sits in the sky -->
