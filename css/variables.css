@@ -1,4 +1,4 @@
-/* The Book Keeper Front Door: variables.css V1.1 · Part 1 of 1 */
+/* The Book Keeper Front Door: variables.css V1.2 · Part 1 of 1 */
 
 :root {
   /* Theme Canon v2.0 palette */
@@ -12,6 +12,7 @@
   /* Page */
   --page-bg-image: url("../images/thebookkeeper-bg.jpg");
   --page-bg-fallback: #1a0f0a;
+  --vignette-rgb: 26, 15, 10;
   --scene-x: 50%;
   --scene-y: 55%;
   --scene-ratio: 0.45;
@@ -44,4 +45,59 @@
   --firefly-color: #F0D58A;
   --haze-color: rgba(238, 230, 210, 0.12);
   --haze-duration: 70s;
+
+  /* Snow (winter only) */
+  --snowflake-color: rgba(255, 255, 255, 0.92);
+  --snowflake-glow: rgba(255, 244, 220, 0.6);
+
+  /* Positions on the painting: lanterns (the window counts as a lantern) */
+  --lantern-1-x: 90.6%;
+  --lantern-1-y: 20.2%;
+  --lantern-2-x: 28.5%;
+  --lantern-2-y: 39.6%;
+  --lantern-3-x: 20.7%;
+  --lantern-3-y: 67.2%;
+  --lantern-4-x: 9.9%;
+  --lantern-4-y: 42.1%;
+
+  /* Positions on the painting: tappable door */
+  --door-link-x: 34.9%;
+  --door-link-y: 41.1%;
+  --door-link-w: 40.6%;
+  --door-link-h: 18.4%;
+
+  /* Positions on the painting: door glow ring */
+  --door-glow-x: 32.5%;
+  --door-glow-y: 40%;
+  --door-glow-w: 45.5%;
+  --door-glow-h: 20.5%;
+}
+
+/* Winter: set by js/season.js during January and February */
+:root[data-season="winter"] {
+  --page-bg-image: url("../images/thebookkeeper-winter.jpg");
+  --page-bg-fallback: #1a2030;
+  --vignette-rgb: 18, 24, 42;
+
+  --lantern-glow: rgba(255, 200, 110, 0.65);
+  --haze-color: rgba(220, 230, 255, 0.14);
+
+  --lantern-1-x: 50.9%;
+  --lantern-1-y: 34.2%;
+  --lantern-2-x: 23.3%;
+  --lantern-2-y: 56.3%;
+  --lantern-3-x: 89.3%;
+  --lantern-3-y: 67.5%;
+  --lantern-4-x: 15.5%;
+  --lantern-4-y: 40.6%;
+
+  --door-link-x: 32.4%;
+  --door-link-y: 42.1%;
+  --door-link-w: 40.1%;
+  --door-link-h: 18.6%;
+
+  --door-glow-x: 28.9%;
+  --door-glow-y: 39.8%;
+  --door-glow-w: 47%;
+  --door-glow-h: 22.5%;
 }
