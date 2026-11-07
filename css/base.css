@@ -1,4 +1,4 @@
-/* The Book Keeper Front Door: base.css V1.1 · Part 1 of 1 */
+/* The Book Keeper Front Door: base.css V1.2 · Part 1 of 1 */
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -43,13 +43,13 @@ body {
   background-size: 100% 100%;
 }
 
-/* The round green door as a link (placed over the door in the painting) */
+/* The round green door as a link (position set in variables.css, per season) */
 .door-link {
   position: absolute;
-  left: 34.9%;
-  top: 41.1%;
-  width: 40.6%;
-  height: 18.4%;
+  left: var(--door-link-x);
+  top: var(--door-link-y);
+  width: var(--door-link-w);
+  height: var(--door-link-h);
   border-radius: 50%;
 }
 
