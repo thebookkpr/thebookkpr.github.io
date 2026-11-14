@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <!-- PROJECT: Book Keeper — Website (The Book Keeper)
-     FILE: index.html · V1.2 · Part 1 of 1
+     FILE: index.html · V1.3 · Part 1 of 1
      LOCATION: thebookkpr.github.io/index.html (repository root)
+     V1.3: The Sound switch now lives inside a menu (a brass medallion
+           at the bottom right). Added the barrel dust ring container
+           (scene.js fills it with specks every 30 seconds).
      V1.2: Added the flower-barrel hotspot and a bottom note from the
            Book Keeper (stays open until closed). Corrected the Sound
            button comment.
@@ -86,6 +89,9 @@
       <!-- A moth passing by (scene.js sends it every 60 seconds) -->
       <div class="moth" aria-hidden="true"><span></span></div>
 
+      <!-- Dust ring around the barrel (scene.js gathers it every 30 seconds) -->
+      <div class="barrel-dust" aria-hidden="true"></div>
+
       <!-- The flower barrel: tap for a note from the Book Keeper -->
       <button class="barrel-link" type="button"
               aria-label="Read a note from the Book Keeper"
@@ -128,9 +134,19 @@
     <button class="keeper-note-close" type="button">Close</button>
   </aside>
 
-  <!-- Sound: starts softly at the first tap; this button turns it on or off (audio.js) -->
-  <button class="sound-toggle" type="button" aria-pressed="false"
-          aria-label="Turn sound on">Sound off</button>
+  <!-- Menu: a brass medallion that opens the Sound switch (audio.js runs the switch) -->
+  <nav class="keeper-menu" aria-label="Menu">
+    <div class="menu-panel" id="menu-panel" aria-hidden="true">
+      <button class="sound-toggle" type="button" aria-pressed="false"
+              aria-label="Turn sound on">Sound off</button>
+    </div>
+    <button class="menu-button" type="button" aria-label="Open menu"
+            aria-expanded="false" aria-controls="menu-panel">
+      <span class="menu-bar"></span>
+      <span class="menu-bar"></span>
+      <span class="menu-bar"></span>
+    </button>
+  </nav>
 
 </body>
 </html>
