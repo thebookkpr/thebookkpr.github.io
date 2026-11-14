@@ -1,81 +1,77 @@
 <!DOCTYPE html>
-<!-- thebookkpr.github.io front door — index.html V1.4 · Part 1 of 1
-     V1.4: winter painting and snowfall in January and February (js/season.js); fourth lantern for the window.
-     V1.3: painted scene layer added, with effects (lanterns, door glow, fireflies, dust, haze) and a tappable door.
-     V1.2: inline styles replaced by css/variables.css, css/base.css and css/effects.css.
-     V1.1: instant redirect removed; small landing page with a link into the library.
-     V1.0: instant redirect to games/.
-     Lives at the root of the thebookkpr.github.io repository. -->
+<!-- PROJECT: Book Keeper — Website (The Book Keeper)
+     FILE: index.html · V1.0 · Part 1 of 1
+     LOCATION: thebookkpr.github.io/index.html (repository root)
+     V1.0: New beginning. One painting (mobile and desktop), living
+           effects, a tappable round green door, and a visible link
+           into the library at /stories/. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#120a07">
-  <meta name="description" content="Storybook worlds, kept with care.">
+  <meta name="description" content="Keeper of storybook worlds. Cozy games, little lives, and quiet adventures, kept with care.">
 
   <title>The Book Keeper</title>
 
-  <!-- Stylesheets -->
   <link rel="stylesheet" href="./css/variables.css">
   <link rel="stylesheet" href="./css/base.css">
   <link rel="stylesheet" href="./css/effects.css">
 
-  <!-- Season: sets summer or winter before the page paints -->
-  <script src="./js/season.js"></script>
+  <script src="./js/scene.js" defer></script>
 </head>
 <body>
 
-  <!-- Scene: the painting, with its effects and the door link -->
+  <!-- Scene: the painting, its living light, and the door -->
   <div class="scene">
     <div class="scene-art">
 
-      <!-- Sky and mist -->
-      <div class="sky-shimmer"></div>
-      <div class="haze"></div>
+      <!-- Painting: mobile by default, desktop on wide screens -->
+      <picture>
+        <source media="(min-width: 900px) and (orientation: landscape)"
+                srcset="./images/thebookeeper-desktop.jpg">
+        <img class="scene-img"
+             src="./images/thebookkeeper-bg.jpg"
+             alt="A round green door set into a hillside beneath ancient roots, lit by lanterns at dusk."
+             decoding="async">
+      </picture>
+
+      <!-- Mist and sky -->
+      <div class="sky-shimmer" aria-hidden="true"></div>
+      <div class="haze" aria-hidden="true"></div>
 
       <!-- Light -->
-      <div class="door-glow"></div>
-      <div class="lantern lantern-1"></div>
-      <div class="lantern lantern-2"></div>
-      <div class="lantern lantern-3"></div>
-      <div class="lantern lantern-4"></div>
+      <div class="door-glow" aria-hidden="true"></div>
+      <div class="window-glow" aria-hidden="true"></div>
+      <div class="lantern lantern-1" aria-hidden="true"></div>
+      <div class="lantern lantern-2" aria-hidden="true"></div>
+      <div class="lantern lantern-3" aria-hidden="true"></div>
+      <div class="lantern lantern-4" aria-hidden="true"></div>
+      <div class="lantern lantern-5" aria-hidden="true"></div>
 
-      <!-- Tiny lights (summer) -->
+      <!-- Tiny lights -->
       <div class="fireflies" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
       </div>
       <div class="gold-dust" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
       </div>
 
-      <!-- The round green door, tappable -->
-      <a class="door-link" href="./stories/" aria-label="Enter the Library through the round green door"></a>
+      <!-- The round green door: tappable -->
+      <a class="door-link" href="./stories/"
+         aria-label="Enter the Library through the round green door"></a>
 
     </div>
-
-    <!-- Snow (winter only): flakes are created by js/season.js -->
-    <div class="snow" aria-hidden="true"></div>
   </div>
 
   <!-- Title: sits in the sky -->
   <header class="threshold-header">
     <h1>The Book Keeper</h1>
-    <p class="threshold-tagline">Storybook worlds, kept with care.</p>
+    <p class="threshold-tagline">Keeper of storybook worlds.</p>
+    <p class="threshold-lore">The lanterns are lit, and the kettle is still warm.</p>
   </header>
 
   <!-- Entrance: sits on the path -->
