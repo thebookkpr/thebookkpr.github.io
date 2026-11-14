@@ -1,6 +1,10 @@
 /* PROJECT: Book Keeper — Website (The Book Keeper)
-   FILE: css/base.css · V1.2 · Part 1 of 1
+   FILE: css/base.css · V1.3 · Part 1 of 1
    LOCATION: thebookkpr.github.io/css/base.css
+   V1.3: The Sound switch now sits inside a menu. Added the brass
+         menu medallion (round, gold rim, fine inner line, three gold
+         lines) and its small panel that rises when .is-open is set on
+         .keeper-menu (scene.js). Replaced the old floating Sound button.
    V1.2: Royal Enter the Library link (translucent black, double gold
          frame, pointed ends) that gently leaves at 10 seconds
          (.is-leaving, set by scene.js). The page softens while the door
@@ -454,40 +458,143 @@ main:has(.enter-library:focus-visible) {
   pointer-events: none;
 }
 
-/* ---------- Sound button: small, quiet, always reachable ---------- */
-.sound-toggle {
+/* ---------- Menu: a brass medallion that opens a small panel (V1.3) ---------- */
+.keeper-menu {
   position: fixed;
   z-index: var(--z-sound);
   right: 1rem;
   bottom: calc(1rem + var(--safe-bottom));
-  min-width: 2.75rem;
+}
+
+/* The medallion: round, dark, with a brass rim and a fine inner line */
+.menu-button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28rem;
+  width: var(--menu-size);
+  height: var(--menu-size);
+  margin: 0;
+  padding: 0;
+  border: 2px solid var(--menu-gold);
+  border-radius: 50%;
+  background: var(--menu-fill);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 0.7rem var(--royal-glow);
+  cursor: pointer;
+  opacity: 0.85;
+  outline: none;
+  transition: opacity var(--t-medium) var(--ease-calm),
+              box-shadow var(--t-medium) var(--ease-calm),
+              background var(--t-medium) var(--ease-calm);
+}
+
+/* The fine inner line, echoing the Enter link's double frame */
+.menu-button::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  border: 1px solid var(--royal-inner);
+  pointer-events: none;
+}
+
+/* Three gold lines; the middle one is a little shorter, like a vine tip */
+.menu-bar {
+  display: block;
+  width: 1.2rem;
+  height: 2px;
+  border-radius: var(--radius-soft);
+  background: linear-gradient(90deg, var(--menu-gold-hi), var(--menu-gold), var(--royal-gold-lo));
+  transition: width var(--t-medium) var(--ease-calm),
+              opacity var(--t-medium) var(--ease-calm);
+}
+.menu-bar:nth-child(2) { width: 0.8rem; }
+
+.menu-button:hover,
+.menu-button:active,
+.keeper-menu.is-open .menu-button {
+  opacity: 1;
+  background: var(--menu-fill-lit);
+  box-shadow: 0 0 1.1rem var(--royal-glow-lit);
+}
+
+/* Opened: the middle line grows to match the others, like a lantern lit */
+.keeper-menu.is-open .menu-bar:nth-child(2) { width: 1.2rem; }
+
+.menu-button:focus-visible {
+  outline: 3px solid var(--firelight-gold);
+  outline-offset: 3px;
+}
+
+/* The panel: rises from just above the medallion */
+.menu-panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.65rem);
+  min-width: 10.5rem;
+  padding: 0.5rem;
+  background: var(--menu-panel-bg);
+  border: 1px solid var(--menu-panel-edge);
+  border-radius: 1rem;
+  box-shadow: 0 0.4rem 1.4rem rgba(0, 0, 0, 0.45), 0 0 1rem var(--royal-glow);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+
+  /* Resting state */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.6rem) scale(0.97);
+  transform-origin: bottom right;
+  transition: opacity var(--t-menu) var(--ease-calm),
+              transform var(--t-menu) var(--ease-calm),
+              visibility 0s linear var(--t-menu);
+}
+
+.keeper-menu.is-open .menu-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  transition: opacity var(--t-menu) var(--ease-calm),
+              transform var(--t-menu) var(--ease-calm),
+              visibility 0s;
+}
+
+/* The Sound switch (audio.js sets its words and aria-pressed) */
+.sound-toggle {
+  display: block;
+  width: 100%;
   min-height: 2.75rem;
-  padding: 0.4rem 1rem;
+  margin: 0;
+  padding: 0.5rem 1.1rem;
   font-family: var(--font-reading);
   font-weight: 600;
   font-size: var(--size-sound);
+  text-align: center;
   color: var(--text-soft);
-  background: var(--panel-bg);
+  background: transparent;
   border: 1px solid var(--panel-edge);
   border-radius: var(--radius-soft);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
   cursor: pointer;
-  opacity: 0.75;
-  transition: opacity var(--t-medium) var(--ease-calm),
-              color var(--t-medium) var(--ease-calm),
-              box-shadow var(--t-medium) var(--ease-calm);
+  transition: color var(--t-medium) var(--ease-calm),
+              background var(--t-medium) var(--ease-calm),
+              box-shadow var(--t-medium) var(--ease-calm),
+              border-color var(--t-medium) var(--ease-calm);
 }
 
 .sound-toggle:hover,
-.sound-toggle:active,
-.sound-toggle[aria-pressed="true"] {
-  opacity: 1;
+.sound-toggle:active {
   color: var(--parchment);
+  background: var(--royal-fill);
 }
 
 .sound-toggle[aria-pressed="true"] {
-  box-shadow: 0 0 1rem var(--glow-soft);
+  color: var(--royal-gold-hi);
+  border-color: var(--royal-gold);
+  box-shadow: 0 0 0.9rem var(--royal-glow);
 }
 
 .sound-toggle:focus-visible {
@@ -519,4 +626,11 @@ main:has(.enter-library:focus-visible) {
     transition: opacity 0.5s linear, visibility 0s linear 0.5s;
   }
   .keeper-note.is-open { transition: opacity 0.5s linear, visibility 0s; }
-   }
+
+  .menu-panel,
+  .keeper-menu.is-open .menu-panel {
+    transform: none;
+    transition: opacity 0.4s linear, visibility 0s linear 0.4s;
+  }
+  .keeper-menu.is-open .menu-panel { transition: opacity 0.4s linear, visibility 0s; }
+                   }
