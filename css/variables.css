@@ -1,6 +1,8 @@
 /* PROJECT: Book Keeper — Website (The Book Keeper)
-   FILE: css/variables.css · V1.2 · Part 1 of 1
+   FILE: css/variables.css · V1.3 · Part 1 of 1
    LOCATION: thebookkpr.github.io/css/variables.css
+   V1.3: Added the menu medallion and menu panel colors, sizes and
+         timing, plus the barrel dust ring colors, size and timing.
    V1.2: Added royal Enter link colors (black and gold), the Enter
          link fade-away timing, the barrel note (bottom sheet) colors
          and timings, and the --z-note layer.
@@ -29,7 +31,7 @@
   --panel-bg:       rgba(18, 10, 7, 0.55);   /* translucent panel behind text */
   --panel-edge:     rgba(215, 180, 106, 0.35);
 
-  /* ---------- Royal Enter link (V1.2) ---------- */
+  /* ---------- Royal Enter link ---------- */
   --royal-fill:      rgba(14, 8, 5, 0.62);    /* slightly transparent black */
   --royal-fill-lit:  rgba(14, 8, 5, 0.78);    /* a little deeper when touched */
   --royal-gold-hi:   #F1DDA6;                 /* pale gold, text and highlights */
@@ -39,6 +41,15 @@
   --royal-glow:      rgba(215, 180, 106, 0.28);
   --royal-glow-lit:  rgba(255, 210, 130, 0.55);
 
+  /* ---------- Menu medallion and panel (V1.3) ---------- */
+  --menu-fill:       rgba(14, 8, 5, 0.7);       /* dark tea-black, slightly see-through */
+  --menu-fill-lit:   rgba(14, 8, 5, 0.85);
+  --menu-gold:       var(--royal-gold);         /* the brass rim and the three lines */
+  --menu-gold-hi:    var(--royal-gold-hi);      /* the rim's highlight */
+  --menu-panel-bg:   rgba(24, 14, 9, 0.92);
+  --menu-panel-edge: rgba(215, 180, 106, 0.45);
+  --menu-size:       3rem;                      /* 48 px touch target */
+
   /* ---------- Light (effects) ---------- */
   --glow-warm:      rgba(255, 190, 90, 0.55);
   --glow-soft:      rgba(255, 200, 120, 0.25);
@@ -46,6 +57,12 @@
   --dust-gold:      rgba(215, 180, 106, 0.85);
   --firefly:        rgba(255, 230, 150, 0.95);
   --haze-cool:      rgba(102, 122, 142, 0.18);
+
+  /* ---------- Barrel dust ring (V1.3) ---------- */
+  --ring-speck:     rgba(255, 226, 150, 0.95);  /* tiny warm specks */
+  --ring-glow:      rgba(255, 200, 110, 0.5);
+  --ring-count:     14;                         /* how many specks (scene.js reads this idea; keep in step) */
+  --ring-speck-size: 4px;
 
   /* ---------- Floating life ---------- */
   --pollen:         rgba(255, 238, 190, 0.8);
@@ -59,7 +76,7 @@
   --tap-glow:       rgba(255, 200, 110, 0.5);
   --tap-ring:       rgba(215, 180, 106, 0.55);
 
-  /* ---------- Barrel note, a bottom sheet (V1.2) ---------- */
+  /* ---------- Barrel note, a bottom sheet ---------- */
   --note-bg:        rgba(24, 14, 9, 0.9);        /* tea-dark parchment night */
   --note-edge:      rgba(215, 180, 106, 0.45);
   --note-title:     #F1DDA6;
@@ -101,6 +118,7 @@
   --t-enter-out:    2.2s;    /* Enter link gently leaves (10 seconds in) */
   --t-note:         0.9s;    /* note rises and settles */
   --t-leaving:      1.4s;    /* page softens while the tone finishes */
+  --t-menu:         0.6s;    /* menu panel rises and settles */
 
   --t-flicker:      5s;      /* lantern candlelight loop */
   --t-door-breath:  7s;      /* door glow breathing */
@@ -113,6 +131,7 @@
   --t-leaf:         30s;     /* leaf drifting down */
   --t-moth:         14s;     /* one moth crossing the scene */
   --t-tap:          1.6s;    /* tap magic fading */
+  --t-ring:         10s;     /* one barrel dust ring: gather, glow, drift away */
 
   /* ---------- Stacking order ---------- */
   --z-art:      1;
@@ -120,6 +139,6 @@
   --z-door:     3;
   --z-text:     4;
   --z-magic:    5;   /* tap magic floats above the title */
-  --z-sound:    6;   /* Sound button stays reachable */
+  --z-sound:    6;   /* the menu stays reachable */
   --z-note:     7;   /* the Book Keeper's note rests above everything */
 }
