@@ -1,6 +1,12 @@
 /* PROJECT: Book Keeper — Website (The Book Keeper)
-   FILE: js/audio.js · V1.0 · Part 1 of 1
+   FILE: js/audio.js · V1.1 · Part 1 of 1
    LOCATION: thebookkpr.github.io/js/audio.js
+   V1.1: Sound no longer starts on any random tap. It starts when
+         scene.js calls wake() (a lantern tap, the door, or the Enter
+         link) or when the visitor turns it on in the menu. A visitor
+         who switched sound off in the menu stays quiet. Lantern wake
+         fades in quickly so the first chime is heard. The switch now
+         lives inside the menu panel.
    V1.0: New beginning. Sound for the front door, built from the Sound
          Design Specification. Everything is made in the browser, so no
          sound files are needed.
@@ -10,9 +16,8 @@
          Layer III Interactive: warm lantern tones, a layered door
                    resonance, a soft tap chime (no clicks, no beeps).
          Layer IV  Discovery: the moth's faint shimmer and chime.
-         Starts quietly on the first tap (browsers require a tap) and
-         can be switched with the Sound button. Used by scene.js through
-         window.BookKeeperAudio: tap(), lantern(i), door(), moth(). */
+         Used by scene.js through window.BookKeeperAudio:
+         wake(), tap(), lantern(i), door(), moth(), isOn(). */
 
 (function () {
   "use strict";
@@ -26,13 +31,13 @@
 
   var ctx = null, master = null, bus = null, noiseBuf = null;
   var on = false, ambienceRunning = false, rareTimer = null, lastTap = 0;
-  var begun = false, declined = false;
+  var declined = false;                  // true only after the visitor switched sound off
 
   /* ---------- Saved choice: if they turned sound off, it stays off ---------- */
   try { if (window.localStorage.getItem(KEY) === "off") declined = true; } catch (e) {}
   function save(v) { try { window.localStorage.setItem(KEY, v); } catch (e) {} }
 
-  /* ---------- Button ---------- */
+  /* ---------- The switch inside the menu ---------- */
   function showButton() {
     if (!btn) return;
     btn.setAttribute("aria-pressed", on ? "true" : "false");
@@ -225,13 +230,14 @@
   }
 
   /* ---------- On and off: slow fades, never abrupt ---------- */
-  function start() {
+  function start(quick) {
     if (!AC || on) return;
     if (!ctx) build();
-    on = true; begun = true; declined = false;
+    on = true; declined = false;
     if (ctx.state === "suspended") ctx.resume();
     master.gain.cancelScheduledValues(ctx.currentTime);
-    master.gain.setTargetAtTime(LEVEL, ctx.currentTime, 1.2);
+    // From a lantern or the door the first chime must be heard, so fade in faster
+    master.gain.setTargetAtTime(LEVEL, ctx.currentTime, quick ? 0.25 : 1.2);
     startAmbience();
     scheduleRare();
     save("on");
@@ -251,24 +257,16 @@
     showButton();
   }
 
-  function toggle() { if (on) stop(); else start(); }
+  function toggle() { if (on) stop(); else start(false); }
+
+  /* A lantern, the door, or the Enter link wakes the sound.
+     If the visitor switched sound off in the menu, it stays off. */
+  function wake() {
+    if (!AC || on || declined) return;
+    start(true);
+  }
 
   if (btn) btn.addEventListener("click", toggle);
-
-  /* ---------- First tap anywhere begins the soundscape (unless declined) ---------- */
-  function firstGesture(e) {
-    if (begun || declined) return;
-    if (btn && btn.contains(e.target)) return;   // the button decides for itself
-    start();
-    document.removeEventListener("pointerup", firstGesture, true);
-    document.removeEventListener("click", firstGesture, true);
-    document.removeEventListener("keydown", firstGesture, true);
-  }
-  if (AC && !declined) {
-    document.addEventListener("pointerup", firstGesture, true);
-    document.addEventListener("click", firstGesture, true);
-    document.addEventListener("keydown", firstGesture, true);
-  }
 
   /* ---------- Quiet when the page is not in view ---------- */
   document.addEventListener("visibilitychange", function () {
@@ -279,7 +277,7 @@
   showButton();
 
   window.BookKeeperAudio = {
-    start: start, stop: stop, toggle: toggle,
+    start: function () { start(false); }, stop: stop, toggle: toggle, wake: wake,
     isOn: function () { return on; },
     tap: tap, lantern: lantern, door: door, moth: moth
   };
