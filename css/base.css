@@ -1,7 +1,12 @@
 /* PROJECT: Book Keeper — Website (The Book Keeper)
-   FILE: css/base.css · V1.1 · Part 1 of 1
+   FILE: css/base.css · V1.2 · Part 1 of 1
    LOCATION: thebookkpr.github.io/css/base.css
-   V1.1: Title and lore now start hidden and fade in (.is-shown) and
+   V1.2: Royal Enter the Library link (translucent black, double gold
+         frame, pointed ends) that gently leaves at 10 seconds
+         (.is-leaving, set by scene.js). The page softens while the door
+         tone finishes (body.is-entering). Added the flower-barrel
+         hotspot and the bottom note from the Book Keeper (.is-open).
+   V1.1: Title and lore start hidden and fade in (.is-shown) and
          drift away gently (.is-leaving), driven by scene.js. Added the
          tap-magic layer and the quiet Sound button.
    V1.0: New beginning. Fonts, page reset, the painting layout
@@ -35,6 +40,19 @@ body {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+
+/* ---------- Entering: the page softens while the door tone finishes ---------- */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-note) + 1);
+  background: var(--night);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-leaving) var(--ease-calm);
+}
+body.is-entering::after { opacity: 1; }
 
 /* ---------- Scene: the painting fills the screen, never stretched ---------- */
 .scene {
@@ -96,6 +114,42 @@ body {
 }
 
 .door-link:focus-visible {
+  box-shadow: 0 0 0 3px var(--firelight-gold);
+}
+
+/* ---------- Barrel hotspot: sits over the flower barrel ---------- */
+.barrel-link {
+  position: absolute;
+  z-index: var(--z-door);
+  left: 72.5%;
+  top: 65.5%;
+  width: 22%;
+  height: 9.5%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 38%;
+  background: radial-gradient(ellipse, transparent 60%, transparent);
+  cursor: pointer;
+  outline: none;
+  transition: background var(--t-medium) var(--ease-calm);
+}
+
+@media (min-width: 900px) and (orientation: landscape) {
+  .barrel-link {
+    left: 82.3%;
+    top: 57.5%;
+    width: 11%;
+    height: 12%;
+  }
+}
+
+.barrel-link:hover,
+.barrel-link:active {
+  background: radial-gradient(ellipse, var(--glow-soft), transparent 70%);
+}
+
+.barrel-link:focus-visible {
   box-shadow: 0 0 0 3px var(--firelight-gold);
 }
 
@@ -168,7 +222,7 @@ body {
   color: var(--text-soft);
 }
 
-/* ---------- Entrance: sits on the path ---------- */
+/* ---------- Entrance: sits on the path, royal and slightly transparent ---------- */
 main {
   position: fixed;
   z-index: var(--z-text);
@@ -178,36 +232,215 @@ main {
   display: flex;
   justify-content: center;
   pointer-events: none;
+
+  /* Soft glow around the gold (a drop-shadow follows the pointed shape) */
+  filter: drop-shadow(0 0 0.6rem var(--royal-glow));
+  transition: filter var(--t-medium) var(--ease-calm);
+}
+
+main:has(.enter-library:hover),
+main:has(.enter-library:active),
+main:has(.enter-library:focus-visible) {
+  filter: drop-shadow(0 0 1.1rem var(--royal-glow-lit));
 }
 
 .enter-library {
+  position: relative;
   pointer-events: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 3.25rem;
-  padding: 0.7rem 2rem;
+  min-height: 3.5rem;
+  padding: 0.8rem 2.6rem;
   font-family: var(--font-reading);
   font-weight: 600;
   font-size: var(--size-button);
-  color: var(--parchment);
+  letter-spacing: 0.05em;
+  color: var(--royal-gold-hi);
   text-decoration: none;
-  background: rgba(73, 106, 70, 0.78);   /* door green, translucent */
-  border: 1px solid var(--firelight-gold);
-  border-radius: var(--radius-soft);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  background: var(--royal-fill);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
+  outline: none;
+
+  /* Pointed ends, like a banner or a crest */
+  clip-path: polygon(
+    var(--royal-point) 0,
+    calc(100% - var(--royal-point)) 0,
+    100% 50%,
+    calc(100% - var(--royal-point)) 100%,
+    var(--royal-point) 100%,
+    0 50%);
+
+  transition: background var(--t-medium) var(--ease-calm),
+              color var(--t-medium) var(--ease-calm);
+}
+
+/* Outer frame: a gold ring cut from the same shape (even-odd leaves the middle open) */
+.enter-library::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg,
+    var(--royal-gold-hi), var(--royal-gold) 30%,
+    var(--royal-gold-lo) 55%, var(--royal-gold) 78%, var(--royal-gold-hi));
+  clip-path: polygon(evenodd,
+    var(--royal-point) 0,
+    calc(100% - var(--royal-point)) 0,
+    100% 50%,
+    calc(100% - var(--royal-point)) 100%,
+    var(--royal-point) 100%,
+    0 50%,
+    var(--royal-point) 0,
+    calc(var(--royal-point) + 1px) 2.5px,
+    calc(100% - var(--royal-point) - 1px) 2.5px,
+    calc(100% - 3.5px) 50%,
+    calc(100% - var(--royal-point) - 1px) calc(100% - 2.5px),
+    calc(var(--royal-point) + 1px) calc(100% - 2.5px),
+    3.5px 50%,
+    calc(var(--royal-point) + 1px) 2.5px);
+}
+
+/* Inner line: a thin second frame, the way old crests are drawn */
+.enter-library::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--royal-inner);
+  clip-path: polygon(evenodd,
+    calc(var(--royal-point) + 3px) 6px,
+    calc(100% - var(--royal-point) - 3px) 6px,
+    calc(100% - 9px) 50%,
+    calc(100% - var(--royal-point) - 3px) calc(100% - 6px),
+    calc(var(--royal-point) + 3px) calc(100% - 6px),
+    9px 50%,
+    calc(var(--royal-point) + 3px) 6px,
+    calc(var(--royal-point) + 4px) 7px,
+    calc(100% - var(--royal-point) - 4px) 7px,
+    calc(100% - 10px) 50%,
+    calc(100% - var(--royal-point) - 4px) calc(100% - 7px),
+    calc(var(--royal-point) + 4px) calc(100% - 7px),
+    10px 50%,
+    calc(var(--royal-point) + 4px) 7px);
+}
+
+.enter-library:hover,
+.enter-library:active,
+.enter-library:focus-visible {
+  background: var(--royal-fill-lit);
+  color: #FFF3CC;
+}
+
+/* Gentle leaving at 10 seconds: it settles down and fades like the title */
+.enter-library.is-leaving {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(0.8rem) scale(0.97);
+  transition: opacity var(--t-enter-out) var(--ease-calm),
+              transform var(--t-enter-out) var(--ease-calm),
+              visibility 0s linear var(--t-enter-out);
+}
+
+/* ---------- The Book Keeper's note: rises from the bottom, stays until closed ---------- */
+.keeper-note {
+  position: fixed;
+  z-index: var(--z-note);
+  left: 50%;
+  bottom: 0;
+  width: min(100%, var(--note-max-width));
+  max-height: var(--note-max-height);
+  overflow-y: auto;
+  padding: 0.75rem 1.5rem calc(1.25rem + var(--safe-bottom));
+  background: var(--note-bg);
+  border: 1px solid var(--note-edge);
+  border-bottom: 0;
+  border-radius: 1.5rem 1.5rem 0 0;
+  box-shadow: 0 -0.5rem 2rem rgba(0, 0, 0, 0.45), 0 -0.1rem 1.5rem var(--royal-glow);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--note-text);
+
+  /* Resting below the screen */
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 2.5rem);
+  transition: opacity var(--t-note) var(--ease-calm),
+              transform var(--t-note) var(--ease-calm),
+              visibility 0s linear var(--t-note);
+}
+
+.keeper-note.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition: opacity var(--t-note) var(--ease-calm),
+              transform var(--t-note) var(--ease-calm),
+              visibility 0s;
+}
+
+.keeper-note-handle {
+  width: 2.75rem;
+  height: 4px;
+  margin: 0 auto 0.9rem;
+  border-radius: var(--radius-soft);
+  background: var(--royal-gold);
+  opacity: 0.6;
+}
+
+.keeper-note h2 {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-world);
+  font-weight: 600;
+  font-size: var(--size-note-title);
+  line-height: 1.2;
+  text-align: center;
+  color: var(--note-title);
+}
+
+.keeper-note p {
+  margin: 0 0 0.85rem;
+  font-size: var(--size-note-body);
+  line-height: 1.6;
+}
+
+.keeper-note p:last-of-type {
+  font-family: var(--font-world);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.375rem;
+  text-align: center;
+  color: var(--firelight-gold);
+}
+
+.keeper-note-close {
+  display: block;
+  min-width: 8rem;
+  min-height: 2.75rem;
+  margin: 1.1rem auto 0;
+  padding: 0.5rem 1.8rem;
+  font-family: var(--font-reading);
+  font-weight: 600;
+  font-size: var(--size-button);
+  color: var(--royal-gold-hi);
+  background: var(--royal-fill);
+  border: 1px solid var(--royal-gold);
+  border-radius: var(--radius-soft);
+  cursor: pointer;
   transition: background var(--t-medium) var(--ease-calm),
               box-shadow var(--t-medium) var(--ease-calm);
 }
 
-.enter-library:hover,
-.enter-library:active {
-  background: rgba(73, 106, 70, 0.95);
-  box-shadow: 0 0 1.5rem var(--glow-warm);
+.keeper-note-close:hover,
+.keeper-note-close:active {
+  background: var(--royal-fill-lit);
+  box-shadow: 0 0 1rem var(--royal-glow-lit);
 }
 
-.enter-library:focus-visible {
+.keeper-note-close:focus-visible {
   outline: 3px solid var(--firelight-gold);
   outline-offset: 3px;
 }
@@ -265,6 +498,8 @@ main {
 /* ---------- Gentle for everyone ---------- */
 @media (prefers-reduced-motion: reduce) {
   body { animation: none; }
+  body::after { transition-duration: 0.4s; }
+
   .threshold-header,
   .threshold-header.is-shown,
   .threshold-header.is-leaving {
@@ -272,4 +507,16 @@ main {
     transform: translateX(-50%);
   }
   .threshold-header.is-shown { transition: opacity 0.6s linear, visibility 0s; }
-}
+
+  .enter-library.is-leaving {
+    transform: none;
+    transition: opacity 0.6s linear, visibility 0s linear 0.6s;
+  }
+
+  .keeper-note,
+  .keeper-note.is-open {
+    transform: translate(-50%, 0);
+    transition: opacity 0.5s linear, visibility 0s linear 0.5s;
+  }
+  .keeper-note.is-open { transition: opacity 0.5s linear, visibility 0s; }
+   }
