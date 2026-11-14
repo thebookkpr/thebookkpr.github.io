@@ -1,6 +1,9 @@
 /* PROJECT: Book Keeper — Website (The Book Keeper)
-   FILE: css/variables.css · V1.1 · Part 1 of 1
+   FILE: css/variables.css · V1.2 · Part 1 of 1
    LOCATION: thebookkpr.github.io/css/variables.css
+   V1.2: Added royal Enter link colors (black and gold), the Enter
+         link fade-away timing, the barrel note (bottom sheet) colors
+         and timings, and the --z-note layer.
    V1.1: Added title fade timings, pollen, drifting leaves, moth,
          tap-magic colors and timings, Sound button size, and two
          new stacking layers.
@@ -26,6 +29,16 @@
   --panel-bg:       rgba(18, 10, 7, 0.55);   /* translucent panel behind text */
   --panel-edge:     rgba(215, 180, 106, 0.35);
 
+  /* ---------- Royal Enter link (V1.2) ---------- */
+  --royal-fill:      rgba(14, 8, 5, 0.62);    /* slightly transparent black */
+  --royal-fill-lit:  rgba(14, 8, 5, 0.78);    /* a little deeper when touched */
+  --royal-gold-hi:   #F1DDA6;                 /* pale gold, text and highlights */
+  --royal-gold:      #D7B46A;                 /* firelight gold */
+  --royal-gold-lo:   #A68056;                 /* warm oak, the shaded edge */
+  --royal-inner:     rgba(241, 221, 166, 0.45);
+  --royal-glow:      rgba(215, 180, 106, 0.28);
+  --royal-glow-lit:  rgba(255, 210, 130, 0.55);
+
   /* ---------- Light (effects) ---------- */
   --glow-warm:      rgba(255, 190, 90, 0.55);
   --glow-soft:      rgba(255, 200, 120, 0.25);
@@ -34,17 +47,25 @@
   --firefly:        rgba(255, 230, 150, 0.95);
   --haze-cool:      rgba(102, 122, 142, 0.18);
 
-  /* ---------- Floating life (V1.1) ---------- */
+  /* ---------- Floating life ---------- */
   --pollen:         rgba(255, 238, 190, 0.8);
   --leaf-oak:       rgba(166, 128, 86, 0.85);    /* warm oak */
   --leaf-green:     rgba(108, 140, 90, 0.8);
   --moth-light:     rgba(235, 240, 255, 0.95);   /* pale, moon-touched */
   --moth-glow:      rgba(190, 205, 255, 0.55);
 
-  /* ---------- Tap magic (V1.1) ---------- */
+  /* ---------- Tap magic ---------- */
   --tap-gold:       rgba(255, 220, 140, 0.95);
   --tap-glow:       rgba(255, 200, 110, 0.5);
   --tap-ring:       rgba(215, 180, 106, 0.55);
+
+  /* ---------- Barrel note, a bottom sheet (V1.2) ---------- */
+  --note-bg:        rgba(24, 14, 9, 0.9);        /* tea-dark parchment night */
+  --note-edge:      rgba(215, 180, 106, 0.45);
+  --note-title:     #F1DDA6;
+  --note-text:      #EEE6D2;
+  --note-max-width: 34rem;
+  --note-max-height: 62vh;
 
   /* ---------- Fonts ---------- */
   --font-world:   "Cormorant Garamond", Georgia, "Times New Roman", serif;
@@ -56,6 +77,8 @@
   --size-lore:    1.125rem;                      /* 18 px minimum */
   --size-button:  1.25rem;                       /* 20 px, above the 18 px floor */
   --size-sound:   1.125rem;                      /* 18 px minimum */
+  --size-note-title: clamp(1.5rem, 5vw, 1.75rem); /* 24-28 px, section header size */
+  --size-note-body:  1.125rem;                   /* 18 px minimum */
 
   /* ---------- Layout ---------- */
   --header-top:     clamp(2.5rem, 9vh, 5rem);
@@ -63,6 +86,7 @@
   --safe-top:       env(safe-area-inset-top, 0px);
   --safe-bottom:    env(safe-area-inset-bottom, 0px);
   --radius-soft:    999px;
+  --royal-point:    1.1rem;   /* how far the pointed ends reach in */
 
   /* ---------- Motion: ease in-out, never abrupt ---------- */
   --ease-calm:      cubic-bezier(0.45, 0, 0.55, 1);
@@ -73,6 +97,10 @@
 
   --t-title-in:     2.5s;    /* title gently appears */
   --t-title-out:    2.5s;    /* title gently leaves */
+
+  --t-enter-out:    2.2s;    /* Enter link gently leaves (10 seconds in) */
+  --t-note:         0.9s;    /* note rises and settles */
+  --t-leaving:      1.4s;    /* page softens while the tone finishes */
 
   --t-flicker:      5s;      /* lantern candlelight loop */
   --t-door-breath:  7s;      /* door glow breathing */
@@ -93,4 +121,5 @@
   --z-text:     4;
   --z-magic:    5;   /* tap magic floats above the title */
   --z-sound:    6;   /* Sound button stays reachable */
+  --z-note:     7;   /* the Book Keeper's note rests above everything */
 }
