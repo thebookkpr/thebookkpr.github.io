@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <!-- PROJECT: Book Keeper — Website (The Book Keeper)
-     FILE: index.html · V1.0 · Part 1 of 1
+     FILE: index.html · V1.1 · Part 1 of 1
      LOCATION: thebookkpr.github.io/index.html (repository root)
+     V1.1: Title and lore start hidden (scene.js shows them after
+           5 seconds, hides them after 20 seconds or on any tap).
+           Added pollen, drifting leaves, a moth, a tap-magic layer,
+           a quiet Sound button, and js/audio.js.
      V1.0: New beginning. One painting (mobile and desktop), living
            effects, a tappable round green door, and a visible link
            into the library at /stories/. -->
@@ -19,6 +23,12 @@
   <link rel="stylesheet" href="./css/base.css">
   <link rel="stylesheet" href="./css/effects.css">
 
+  <!-- If scripts are off, the title simply stays visible -->
+  <noscript>
+    <style>.threshold-header { opacity: 1; visibility: visible; }</style>
+  </noscript>
+
+  <script src="./js/audio.js" defer></script>
   <script src="./js/scene.js" defer></script>
 </head>
 <body>
@@ -60,6 +70,19 @@
         <span></span><span></span><span></span><span></span>
       </div>
 
+      <!-- Floating life: pollen and drifting leaves -->
+      <div class="pollen" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span>
+      </div>
+      <div class="leaves" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <!-- A moth passing by (scene.js sends it every 20 seconds) -->
+      <div class="moth" aria-hidden="true"><span></span></div>
+
       <!-- The round green door: tappable -->
       <a class="door-link" href="./stories/"
          aria-label="Enter the Library through the round green door"></a>
@@ -67,7 +90,10 @@
     </div>
   </div>
 
-  <!-- Title: sits in the sky -->
+  <!-- Tap magic: scene.js places little lights here -->
+  <div class="tap-magic" aria-hidden="true"></div>
+
+  <!-- Title: appears after 5 seconds, leaves after 20 or on a tap -->
   <header class="threshold-header">
     <h1>The Book Keeper</h1>
     <p class="threshold-tagline">Keeper of storybook worlds.</p>
@@ -78,6 +104,10 @@
   <main>
     <a class="enter-library" href="./stories/">Enter the Library</a>
   </main>
+
+  <!-- Sound: off until the visitor chooses (audio.js) -->
+  <button class="sound-toggle" type="button" aria-pressed="false"
+          aria-label="Turn sound on">Sound off</button>
 
 </body>
 </html>
