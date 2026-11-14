@@ -1,6 +1,10 @@
 /* PROJECT: Book Keeper — Website (The Book Keeper)
-   FILE: css/base.css · V1.3 · Part 1 of 1
+   FILE: css/base.css · V1.4 · Part 1 of 1
    LOCATION: thebookkpr.github.io/css/base.css
+   V1.4: Added the 20:9 landscape layout (phones turned sideways). The
+         rule "landscape and at least 2:1" matches the picture switch in
+         index.html and sits after the desktop rules so it wins. New
+         painting size, door tap area, and barrel tap area.
    V1.3: The Sound switch now sits inside a menu. Added the brass
          menu medallion (round, gold rim, fine inner line, three gold
          lines) and its small panel that rises when .is-open is set on
@@ -86,6 +90,16 @@ body.is-entering::after { opacity: 1; }
   }
 }
 
+/* Cellphone landscape painting: 20:9 (same rule as the HTML picture, and it
+   comes after the desktop rule so it wins on very wide screens) */
+@media (orientation: landscape) and (min-aspect-ratio: 2/1) {
+  .scene-art {
+    --art-ratio: calc(20 / 9);
+    width: max(100vw, calc(100dvh * var(--art-ratio)));
+    aspect-ratio: 20 / 9;
+  }
+}
+
 .scene-img {
   display: block;
   width: 100%;
@@ -117,6 +131,15 @@ body.is-entering::after { opacity: 1; }
   }
 }
 
+@media (orientation: landscape) and (min-aspect-ratio: 2/1) {
+  .door-link {
+    left: 55.3%;
+    top: 32.7%;
+    width: 19.3%;
+    height: 39.3%;
+  }
+}
+
 .door-link:focus-visible {
   box-shadow: 0 0 0 3px var(--firelight-gold);
 }
@@ -145,6 +168,15 @@ body.is-entering::after { opacity: 1; }
     top: 57.5%;
     width: 11%;
     height: 12%;
+  }
+}
+
+@media (orientation: landscape) and (min-aspect-ratio: 2/1) {
+  .barrel-link {
+    left: 80.8%;
+    top: 54%;
+    width: 12.8%;
+    height: 25%;
   }
 }
 
@@ -458,7 +490,7 @@ main:has(.enter-library:focus-visible) {
   pointer-events: none;
 }
 
-/* ---------- Menu: a brass medallion that opens a small panel (V1.3) ---------- */
+/* ---------- Menu: a brass medallion that opens a small panel ---------- */
 .keeper-menu {
   position: fixed;
   z-index: var(--z-sound);
@@ -633,4 +665,4 @@ main:has(.enter-library:focus-visible) {
     transition: opacity 0.4s linear, visibility 0s linear 0.4s;
   }
   .keeper-menu.is-open .menu-panel { transition: opacity 0.4s linear, visibility 0s; }
-                   }
+   }
