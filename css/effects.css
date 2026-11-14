@@ -1,6 +1,12 @@
 /* PROJECT: Book Keeper — Website (The Book Keeper)
-   FILE: css/effects.css · V1.2 · Part 1 of 1
+   FILE: css/effects.css · V1.3 · Part 1 of 1
    LOCATION: thebookkpr.github.io/css/effects.css
+   V1.3: Added the 20:9 landscape layout of the lights (phones turned
+         sideways): three lanterns, the door glow, the round window glow
+         and the barrel dust ring placed for thebookkeeper-landscape.jpg.
+         Uses the same rule as the picture switch in index.html
+         ("landscape and at least 2:1") and sits after the desktop block
+         so it wins.
    V1.2: Added the barrel dust ring. scene.js builds the specks (.barrel-speck)
          inside .barrel-dust every 30 seconds and adds .is-forming. The
          specks drift in, gather into a circle around the barrel, glow,
@@ -70,7 +76,7 @@
   to   { opacity: 0.8; }
 }
 
-/* ---------- Window glow: desktop only (the round window) ---------- */
+/* ---------- Window glow: wide pictures only (the round window) ---------- */
 .window-glow { display: none; }
 
 /* ---------- Lanterns: candlelight in woodland air ---------- */
@@ -99,7 +105,7 @@
   78%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.03); }
 }
 
-/* ---------- Barrel dust ring: sits around the flower barrel (V1.2) ----------
+/* ---------- Barrel dust ring: sits around the flower barrel ----------
    The circle is centered on the barrel and its flowers. It is empty until
    scene.js adds specks and .is-forming, every 30 seconds. */
 .barrel-dust {
@@ -189,6 +195,37 @@
   .lantern-5 { display: block; left: 83%; top: 47%; width: 7%; animation-delay: -4s; }
 
   .barrel-dust { left: 88%; top: 59%; width: 15%; }
+}
+
+/* ---------- Cellphone landscape layout of the lights (20:9) ----------
+   Same rule as the picture switch in index.html. It comes after the
+   desktop block, so on very wide screens it wins. This picture has three
+   lanterns, so the other two are switched off. The window glow is written
+   out in full here because narrow phones never get the desktop block. */
+@media (orientation: landscape) and (min-aspect-ratio: 2/1) {
+  .door-glow { left: 65%; top: 52.3%; width: 37%; }
+
+  .window-glow {
+    display: block;
+    left: 38.2%; top: 47.5%;
+    width: 13%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, var(--glow-warm), transparent 65%);
+    mix-blend-mode: screen;
+    opacity: 0.6;
+    animation: door-breathe var(--t-door-breath) var(--ease-calm) infinite alternate;
+    animation-delay: -3s;
+  }
+
+  .lantern { width: 10%; }
+  .lantern-1 { left: 47.9%; top: 37.5%; }                  /* hanging, left of the door */
+  .lantern-2 { left: 80.2%; top: 44.6%; width: 10%; }      /* on the post, right of the door */
+  .lantern-3 { left: 24.3%; top: 69.6%; width: 14%; }      /* on the rock, bottom left */
+  .lantern-4 { display: none; }
+  .lantern-5 { display: none; }
+
+  .barrel-dust { left: 87.4%; top: 66%; width: 16%; }
 }
 
 /* ---------- Fireflies: independent, clustering, never UI dots ---------- */
@@ -396,4 +433,4 @@
   .fireflies, .gold-dust, .pollen, .leaves, .moth, .barrel-dust { display: none; }
   .magic-spark { display: none; }
   .magic-ring { animation-duration: 0.8s; }
-     }
+                            }
