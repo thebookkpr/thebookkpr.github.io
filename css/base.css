@@ -1,6 +1,9 @@
 /* PROJECT: Book Keeper — Website (The Book Keeper)
-   FILE: css/base.css · V1.0 · Part 1 of 1
+   FILE: css/base.css · V1.1 · Part 1 of 1
    LOCATION: thebookkpr.github.io/css/base.css
+   V1.1: Title and lore now start hidden and fade in (.is-shown) and
+         drift away gently (.is-leaving), driven by scene.js. Added the
+         tap-magic layer and the quiet Sound button.
    V1.0: New beginning. Fonts, page reset, the painting layout
          (mobile and desktop), the door link, the title panel, and
          the Enter the Library button. Uses variables.css. */
@@ -96,13 +99,12 @@ body {
   box-shadow: 0 0 0 3px var(--firelight-gold);
 }
 
-/* ---------- Title: sits in the sky, on a soft panel ---------- */
+/* ---------- Title: hidden at first, appears and leaves gently ---------- */
 .threshold-header {
   position: fixed;
   z-index: var(--z-text);
   top: calc(var(--header-top) + var(--safe-top));
   left: 50%;
-  transform: translateX(-50%);
   width: min(88vw, 30rem);
   padding: 1rem 1.25rem 1.1rem;
   text-align: center;
@@ -112,6 +114,32 @@ body {
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   pointer-events: none;
+
+  /* Hidden state (also the state after leaving) */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(0.6rem);
+  transition: opacity var(--t-title-out) var(--ease-calm),
+              transform var(--t-title-out) var(--ease-calm),
+              visibility 0s linear var(--t-title-out);
+}
+
+/* Appearing: scene.js adds .is-shown after 5 seconds */
+.threshold-header.is-shown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+  transition: opacity var(--t-title-in) var(--ease-calm),
+              transform var(--t-title-in) var(--ease-calm),
+              visibility 0s;
+}
+
+/* Leaving: scene.js swaps .is-shown for .is-leaving (20 seconds or a tap).
+   It rises a little, softens, and fades like breath on glass. */
+.threshold-header.is-leaving {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-0.9rem) scale(0.98);
 }
 
 .threshold-header h1 {
@@ -184,7 +212,64 @@ main {
   outline-offset: 3px;
 }
 
+/* ---------- Tap magic layer: effects.css draws the lights ---------- */
+.tap-magic {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-magic);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ---------- Sound button: small, quiet, always reachable ---------- */
+.sound-toggle {
+  position: fixed;
+  z-index: var(--z-sound);
+  right: 1rem;
+  bottom: calc(1rem + var(--safe-bottom));
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 1rem;
+  font-family: var(--font-reading);
+  font-weight: 600;
+  font-size: var(--size-sound);
+  color: var(--text-soft);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-edge);
+  border-radius: var(--radius-soft);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity var(--t-medium) var(--ease-calm),
+              color var(--t-medium) var(--ease-calm),
+              box-shadow var(--t-medium) var(--ease-calm);
+}
+
+.sound-toggle:hover,
+.sound-toggle:active,
+.sound-toggle[aria-pressed="true"] {
+  opacity: 1;
+  color: var(--parchment);
+}
+
+.sound-toggle[aria-pressed="true"] {
+  box-shadow: 0 0 1rem var(--glow-soft);
+}
+
+.sound-toggle:focus-visible {
+  outline: 3px solid var(--firelight-gold);
+  outline-offset: 3px;
+}
+
 /* ---------- Gentle for everyone ---------- */
 @media (prefers-reduced-motion: reduce) {
   body { animation: none; }
+  .threshold-header,
+  .threshold-header.is-shown,
+  .threshold-header.is-leaving {
+    transition: opacity 0.6s linear, visibility 0s linear 0.6s;
+    transform: translateX(-50%);
+  }
+  .threshold-header.is-shown { transition: opacity 0.6s linear, visibility 0s; }
 }
