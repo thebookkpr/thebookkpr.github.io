@@ -1,19 +1,25 @@
 /* PROJECT: Book Keeper — Website (The Book Keeper)
-   FILE: js/scene.js · V1.2 · Part 1 of 1
+   FILE: js/scene.js · V1.3 · Part 1 of 1
    LOCATION: thebookkpr.github.io/js/scene.js
+   V1.3: Added the menu (the brass medallion opens and closes the
+         panel that holds the Sound switch). Tapping a lantern turns
+         sound on (audio.js wake). The door and the Enter link also wake
+         the sound before the 5 second tone wait. Taps inside the
+         welcome note and the menu make no chimes. Every 30 seconds
+         tiny dust specks gather into a circle around the barrel.
    V1.2: The moth passes every 60 seconds. The door and the Enter the
-         Library link now wait 5 seconds so the door tone can be heard
-         in full, and the page softens while it finishes. The Enter
-         link leaves 10 seconds after arrival. Tapping the flower barrel
+         Library link wait 5 seconds so the door tone can be heard in
+         full, and the page softens while it finishes. The Enter link
+         leaves 10 seconds after arrival. Tapping the flower barrel
          opens the Book Keeper's note, which stays until it is closed.
    V1.1: Title and lore appear 5 seconds after load, leave after
          20 seconds, and leave on any tap. A moth crosses the scene.
          Every tap makes a small golden magic. Calls the quiet sounds
          in js/audio.js when it is present.
    V1.0: New beginning. Touch is attention, not command.
-         Works with css/effects.css (.is-lit, .is-awake, .is-flying)
-         and css/base.css (.is-shown, .is-leaving, .is-open,
-         body.is-entering). */
+         Works with css/effects.css (.is-lit, .is-awake, .is-flying,
+         .is-forming) and css/base.css (.is-shown, .is-leaving,
+         .is-open, body.is-entering). */
 
 (function () {
   "use strict";
@@ -25,11 +31,15 @@
   var doorGlow = art.querySelector(".door-glow");
   var moth = art.querySelector(".moth");
   var barrel = art.querySelector(".barrel-link");
+  var ring = art.querySelector(".barrel-dust");
   var header = document.querySelector(".threshold-header");
   var magicLayer = document.querySelector(".tap-magic");
   var enterLink = document.querySelector(".enter-library");
   var note = document.getElementById("keeper-note");
   var noteClose = note ? note.querySelector(".keeper-note-close") : null;
+  var menu = document.querySelector(".keeper-menu");
+  var menuButton = menu ? menu.querySelector(".menu-button") : null;
+  var menuPanel = menu ? menu.querySelector(".menu-panel") : null;
   var lanterns = Array.prototype.slice.call(art.querySelectorAll(".lantern"));
 
   var TITLE_DELAY_MS = 5000;     // title appears 5 seconds after the page
@@ -37,6 +47,9 @@
   var ENTER_LINK_STAY_MS = 10000; // the Enter link leaves 10 seconds in
   var MOTH_EVERY_MS = 60000;     // a slow moth passes every 60 seconds
   var MOTH_FLIGHT_MS = 14000;    // matches --t-moth in variables.css
+  var RING_EVERY_MS = 30000;     // dust gathers around the barrel every 30 seconds
+  var RING_COUNT = 14;           // matches --ring-count in variables.css
+  var RING_LIFE_MS = 12500;      // 10 s animation, plus the longest delay, plus a breath
   var STAGGER_MS = 350;          // light travels, it does not appear at once
   var LINGER_MS = 6000;          // the visitor leaves a gentle mark (3 to 15 s)
   var TONE_WAIT_MS = 5000;       // the door tone is heard in full
@@ -46,6 +59,7 @@
   var MAGIC_LIFE_MS = 1800;      // a little longer than --t-tap
 
   var timers = [];
+  var ringTimer = null;
   var entering = false;
   var reduceMotion = window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -150,9 +164,9 @@
     burst.style.left = x + "px";
     burst.style.top = y + "px";
 
-    var ring = document.createElement("div");
-    ring.className = "magic-ring";
-    burst.appendChild(ring);
+    var ringEl = document.createElement("div");
+    ringEl.className = "magic-ring";
+    burst.appendChild(ringEl);
 
     var count = 6;
     for (var i = 0; i < count; i++) {
@@ -172,15 +186,22 @@
     }, MAGIC_LIFE_MS);
   }
 
+  /* Taps inside the welcome note or the menu are quiet */
+  function isQuietPlace(target) {
+    return !!(target && target.closest && target.closest(".keeper-note, .keeper-menu"));
+  }
+
   /* ---------- One touch anywhere: acknowledge, soften the title ---------- */
   document.addEventListener("pointerdown", function (e) {
     makeMagic(e.clientX, e.clientY);
-    sound("tap");
+    if (!isQuietPlace(e.target)) sound("tap");
     hideTitle();
   });
 
-  /* Tap near a lantern: it notices, and the others answer */
-  art.addEventListener("pointerdown", function (e) {
+  /* Tap near a lantern: it notices, the others answer, and sound wakes.
+     This waits for the finger to lift (pointerup) because phones only allow
+     sound to start from a finished tap. */
+  art.addEventListener("pointerup", function (e) {
     if (entering) return;
     if (door && door.contains(e.target)) return;
     if (barrel && barrel.contains(e.target)) return;
@@ -192,16 +213,53 @@
     });
 
     if (nearest && best < nearest.getBoundingClientRect().width * 0.9) {
+      sound("wake");                       // a lantern tap turns sound on
       lightFrom(centerOf(nearest), 3);
+    }
+  });
+
+  /* ---------- The menu: a medallion that opens the Sound switch ---------- */
+  function openMenu() {
+    if (!menu) return;
+    menu.classList.add("is-open");
+    if (menuPanel) menuPanel.setAttribute("aria-hidden", "false");
+    if (menuButton) {
+      menuButton.setAttribute("aria-expanded", "true");
+      menuButton.setAttribute("aria-label", "Close menu");
+    }
+  }
+
+  function closeMenu() {
+    if (!menu || !menu.classList.contains("is-open")) return;
+    menu.classList.remove("is-open");
+    if (menuPanel) menuPanel.setAttribute("aria-hidden", "true");
+    if (menuButton) {
+      menuButton.setAttribute("aria-expanded", "false");
+      menuButton.setAttribute("aria-label", "Open menu");
+    }
+  }
+
+  if (menuButton) {
+    menuButton.addEventListener("click", function () {
+      if (menu.classList.contains("is-open")) closeMenu(); else openMenu();
+    });
+  }
+
+  /* Tapping anywhere outside the menu folds it away */
+  document.addEventListener("pointerdown", function (e) {
+    if (menu && menu.classList.contains("is-open") && !menu.contains(e.target)) {
+      closeMenu();
     }
   });
 
   /* ---------- The Book Keeper's note: opens from the barrel, stays until closed ---------- */
   function openNote() {
     if (!note || entering) return;
+    closeMenu();
     note.classList.add("is-open");
     note.setAttribute("aria-hidden", "false");
     if (barrel) barrel.setAttribute("aria-expanded", "true");
+    clearRing();                           // the dust has done its work
     if (noteClose) {
       window.setTimeout(function () {
         try { noteClose.focus({ preventScroll: true }); } catch (err) { noteClose.focus(); }
@@ -228,8 +286,53 @@
   if (noteClose) noteClose.addEventListener("click", closeNote);
 
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") closeNote();
+    if (e.key === "Escape") {
+      closeMenu();
+      closeNote();
+    }
   });
+
+  /* ---------- Barrel dust: specks gather into a circle every 30 seconds ---------- */
+  function clearRing() {
+    window.clearTimeout(ringTimer);
+    if (!ring) return;
+    ring.classList.remove("is-forming");
+    while (ring.firstChild) ring.removeChild(ring.firstChild);
+  }
+
+  function gatherDust() {
+    if (!ring || reduceMotion || document.hidden || entering) return;
+    if (note && note.classList.contains("is-open")) return;
+
+    clearRing();
+
+    for (var i = 0; i < RING_COUNT; i++) {
+      var speck = document.createElement("span");
+      speck.className = "barrel-speck";
+
+      // Place each speck evenly around the circle (percent of the ring's box)
+      var angle = (Math.PI * 2 * i) / RING_COUNT;
+      speck.style.left = (50 + 46 * Math.cos(angle)).toFixed(2) + "%";
+      speck.style.top = (50 + 46 * Math.sin(angle)).toFixed(2) + "%";
+
+      // Each one drifts in from somewhere different, a little after the last
+      var from = angle + (Math.random() - 0.5) * 1.6;
+      var far = 50 + Math.random() * 70;
+      speck.style.setProperty("--sx", Math.round(Math.cos(from) * far) + "px");
+      speck.style.setProperty("--sy", Math.round(Math.sin(from) * far) + "px");
+      speck.style.setProperty("--delay", (Math.random() * 1.8).toFixed(2) + "s");
+
+      ring.appendChild(speck);
+    }
+
+    void ring.offsetWidth;                 // let the browser see the reset before the animation starts
+    ring.classList.add("is-forming");
+    ringTimer = window.setTimeout(clearRing, RING_LIFE_MS);
+  }
+
+  if (ring && !reduceMotion) {
+    window.setInterval(gatherDust, RING_EVERY_MS);
+  }
 
   /* ---------- Entering: the door and the Enter link share one gentle ending ---------- */
   function entryWait() {
@@ -242,12 +345,15 @@
 
     if (entering) { e.preventDefault(); return; }
 
+    sound("wake");                               // so the tone can play (unless sound was switched off)
     var wait = entryWait();
     if (wait === 0) return;                      // follow the link at once
 
     e.preventDefault();
     entering = true;
     closeNote();
+    closeMenu();
+    clearRing();
 
     var href = link.getAttribute("href");
     if (doorGlow) doorGlow.classList.add("is-awake");
@@ -300,5 +406,7 @@
     document.body.classList.remove("is-entering");
     if (doorGlow) doorGlow.classList.remove("is-awake");
     lanterns.forEach(function (el) { el.classList.remove("is-lit"); });
+    closeMenu();
+    clearRing();
   });
 })();
