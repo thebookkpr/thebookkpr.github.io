@@ -1,255 +1,178 @@
-/* The Book Keeper Front Door: effects.css V1.2 · Part 1 of 1 */
+/* PROJECT: Book Keeper — Website (The Book Keeper)
+   FILE: css/effects.css · V1.0 · Part 1 of 1
+   LOCATION: thebookkpr.github.io/css/effects.css
+   V1.0: New beginning. Living light for the painting: lanterns, door
+         glow, window glow, fireflies, golden dust, haze, and sky
+         shimmer. Calm, slow, never flashing. Uses variables.css.
+         Classes for scene.js: .is-lit (lantern), .is-awake (door glow). */
 
-/* Stacking: scene (0), vignette (1), text and button (2) */
-.threshold-header,
-main {
-  position: relative;
-  z-index: 2;
-}
-
-/* Soft vignette so text stays readable over the painting */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    linear-gradient(to bottom, rgba(var(--vignette-rgb), 0.55) 0%, rgba(var(--vignette-rgb), 0) 28%),
-    linear-gradient(to top, rgba(var(--vignette-rgb), 0.6) 0%, rgba(var(--vignette-rgb), 0) 25%);
-}
-
-/* Effect layers sit on the painting and never block taps */
-.lantern,
-.door-glow,
-.sky-shimmer,
-.haze,
-.fireflies,
-.gold-dust,
-.snow {
+/* ---------- Shared: effects never block taps ---------- */
+.sky-shimmer, .haze, .door-glow, .window-glow,
+.lantern, .fireflies, .gold-dust {
   position: absolute;
   pointer-events: none;
+  z-index: var(--z-effects);
 }
 
-/* Lantern glow: a soft warm pulse over the four lights (three lanterns and the window) */
-.lantern {
-  width: 15%;
+/* ---------- Sky shimmer: slow breathing color at the top ---------- */
+.sky-shimmer {
+  inset: 0 0 60% 0;
+  background: linear-gradient(to bottom,
+    rgba(255, 170, 190, 0.14), rgba(255, 190, 120, 0.06) 60%, transparent);
+  mix-blend-mode: screen;
+  animation: sky-breathe var(--t-sky) var(--ease-calm) infinite alternate;
+}
+@keyframes sky-breathe {
+  from { opacity: 0.35; }
+  to   { opacity: 1; }
+}
+
+/* ---------- Haze: cool mist drifting slowly ---------- */
+.haze {
+  inset: 25% -15% 0 -15%;
+  background:
+    radial-gradient(ellipse at 25% 60%, var(--haze-cool), transparent 55%),
+    radial-gradient(ellipse at 75% 40%, var(--haze-cool), transparent 50%);
+  animation: haze-drift var(--t-haze) var(--ease-calm) infinite alternate;
+}
+@keyframes haze-drift {
+  from { transform: translateX(-4%); }
+  to   { transform: translateX(4%); }
+}
+
+/* ---------- Door glow: warm, breathing, awakens on touch ---------- */
+.door-glow {
+  left: 50%;
+  top: 56%;
+  width: 78%;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--lantern-glow) 0%, rgba(255, 190, 90, 0) 65%);
+  background: radial-gradient(circle, var(--glow-door), transparent 65%);
   mix-blend-mode: screen;
-  animation: lantern-pulse var(--lantern-pulse-duration) ease-in-out infinite;
+  opacity: 0.6;
+  animation: door-breathe var(--t-door-breath) var(--ease-calm) infinite alternate;
+  transition: opacity var(--t-medium) var(--ease-calm);
 }
-
-.lantern-1 { left: var(--lantern-1-x); top: var(--lantern-1-y); }
-.lantern-2 { left: var(--lantern-2-x); top: var(--lantern-2-y); animation-delay: -1.7s; }
-.lantern-3 { left: var(--lantern-3-x); top: var(--lantern-3-y); animation-delay: -3.3s; }
-.lantern-4 { left: var(--lantern-4-x); top: var(--lantern-4-y); width: 10%; animation-delay: -0.8s; }
-
-@keyframes lantern-pulse {
-  0%, 100% { opacity: 0.55; }
-  50%      { opacity: 1; }
-}
-
-/* Door glow: golden light breathing around the round door */
-.door-glow {
-  left: var(--door-glow-x);
-  top: var(--door-glow-y);
-  width: var(--door-glow-w);
-  height: var(--door-glow-h);
-  border-radius: 50%;
-  background: radial-gradient(ellipse closest-side, rgba(215, 180, 106, 0) 70%, var(--door-glow) 90%, rgba(215, 180, 106, 0) 100%);
-  animation: door-breathe 7s ease-in-out infinite;
-}
-
-@keyframes door-breathe {
-  0%, 100% { opacity: 0.6; }
-  50%      { opacity: 1; }
-}
-
-/* Brighter ring when the visitor reaches for the door or the button */
-.door-glow::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(ellipse closest-side, rgba(215, 180, 106, 0) 60%, var(--door-glow-bright) 90%, rgba(215, 180, 106, 0) 100%);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-body:has(.enter-library:hover) .door-glow::after,
-body:has(.enter-library:focus-visible) .door-glow::after,
-body:has(.enter-library:active) .door-glow::after,
-body:has(.door-link:hover) .door-glow::after,
-body:has(.door-link:focus-visible) .door-glow::after,
-body:has(.door-link:active) .door-glow::after {
+.door-glow.is-awake,
+.scene-art:has(.door-link:hover) .door-glow {
   opacity: 1;
+  animation-play-state: paused;
+}
+@keyframes door-breathe {
+  from { opacity: 0.5; }
+  to   { opacity: 0.8; }
 }
 
-/* Sky shimmer: the sunset glow breathes very slightly */
-.sky-shimmer {
-  left: 15%;
-  top: 3%;
-  width: 70%;
-  height: 16%;
-  background: radial-gradient(ellipse, rgba(255, 200, 140, 0.35) 0%, rgba(255, 200, 140, 0) 70%);
+/* ---------- Window glow: desktop only (the round window) ---------- */
+.window-glow { display: none; }
+
+/* ---------- Lanterns: candlelight in woodland air ---------- */
+.lantern {
+  width: 22%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--glow-warm), var(--glow-soft) 40%, transparent 70%);
   mix-blend-mode: screen;
-  animation: sky-shimmer 12s ease-in-out infinite;
+  opacity: 0.8;
+  animation: flicker var(--t-flicker) var(--ease-calm) infinite;
+  transition: filter var(--t-medium) var(--ease-calm);
+}
+.lantern.is-lit { filter: brightness(1.45); }
+
+.lantern-1 { left: 15.5%; top: 27%;   animation-delay: -0.5s; }
+.lantern-2 { left: 15.7%; top: 46.4%; animation-delay: -2s;   width: 26%; }
+.lantern-3 { left: 81.8%; top: 39%;   animation-delay: -3.4s; }
+.lantern-4 { left: 19%;   top: 73.5%; animation-delay: -1.2s; width: 28%; }
+.lantern-5 { display: none; }
+
+@keyframes flicker {
+  0%, 100% { opacity: 0.75; transform: translate(-50%, -50%) scale(1); }
+  30%      { opacity: 0.95; transform: translate(-50%, -50%) scale(1.05); }
+  55%      { opacity: 0.8;  transform: translate(-50%, -50%) scale(0.97); }
+  78%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.03); }
 }
 
-@keyframes sky-shimmer {
-  0%, 100% { opacity: 0.4; }
-  50%      { opacity: 0.9; }
+/* ---------- Desktop layout of the lights ---------- */
+@media (min-width: 900px) and (orientation: landscape) {
+  .door-glow { left: 68.8%; top: 49.4%; width: 42%; }
+
+  .window-glow {
+    display: block;
+    left: 36.5%; top: 47%;
+    width: 15%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, var(--glow-warm), transparent 65%);
+    mix-blend-mode: screen;
+    opacity: 0.6;
+    animation: door-breathe var(--t-door-breath) var(--ease-calm) infinite alternate;
+    animation-delay: -3s;
+  }
+
+  .lantern { width: 11%; }
+  .lantern-1 { left: 85%;   top: 21%; }
+  .lantern-2 { left: 51%;   top: 39%; width: 9%; }
+  .lantern-3 { left: 21.5%; top: 62.7%; width: 14%; }
+  .lantern-4 { left: 54.5%; top: 47.5%; width: 7%; }
+  .lantern-5 { display: block; left: 83%; top: 47%; width: 7%; animation-delay: -4s; }
 }
 
-/* Evening haze: slow mist drifting across the path */
-.haze {
-  left: -20%;
-  top: 58%;
-  width: 140%;
-  height: 38%;
-  background:
-    radial-gradient(ellipse at 30% 50%, var(--haze-color), rgba(238, 230, 210, 0) 60%),
-    radial-gradient(ellipse at 70% 60%, var(--haze-color), rgba(238, 230, 210, 0) 60%);
-  animation: haze-drift var(--haze-duration) ease-in-out infinite alternate;
+/* ---------- Fireflies: independent, clustering, never UI dots ---------- */
+.fireflies span {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--firefly);
+  box-shadow: 0 0 10px 3px var(--glow-warm);
+  opacity: 0;
+  animation: firefly var(--d, 14s) var(--ease-calm) var(--delay, 0s) infinite;
+}
+.fireflies span:nth-child(1) { left: 12%; top: 62%; --dx: 6vw;  --dy: -5vh; --d: 15s; --delay: -2s; }
+.fireflies span:nth-child(2) { left: 30%; top: 70%; --dx: -5vw; --dy: -7vh; --d: 17s; --delay: -6s; }
+.fireflies span:nth-child(3) { left: 78%; top: 66%; --dx: 4vw;  --dy: -6vh; --d: 13s; --delay: -4s; }
+.fireflies span:nth-child(4) { left: 88%; top: 56%; --dx: -6vw; --dy: -4vh; --d: 18s; --delay: -9s; }
+.fireflies span:nth-child(5) { left: 22%; top: 48%; --dx: 5vw;  --dy: -8vh; --d: 16s; --delay: -11s; }
+.fireflies span:nth-child(6) { left: 64%; top: 78%; --dx: -4vw; --dy: -6vh; --d: 14s; --delay: -1s; }
+.fireflies span:nth-child(7) { left: 8%;  top: 40%; --dx: 7vw;  --dy: -3vh; --d: 19s; --delay: -7s; }
+.fireflies span:nth-child(8) { left: 72%; top: 34%; --dx: -3vw; --dy: -5vh; --d: 15s; --delay: -13s; }
+
+@keyframes firefly {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  15%  { opacity: 0.95; }
+  50%  { transform: translate(var(--dx), var(--dy)); opacity: 0.45; }
+  85%  { opacity: 0.9; }
+  100% { transform: translate(0, 0); opacity: 0; }
 }
 
-@keyframes haze-drift {
-  from { transform: translateX(-6%); }
-  to   { transform: translateX(6%); }
-}
-
-/* Fireflies and gold dust: tiny lights, positioned on the painting */
-.fireflies,
-.gold-dust {
-  inset: 0;
-}
-
-.fireflies span,
+/* ---------- Golden dust: slow drift, soft glow, irregular ---------- */
 .gold-dust span {
   position: absolute;
-  border-radius: 50%;
-  opacity: 0;
-}
-
-.fireflies span {
-  width: 6px;
-  height: 6px;
-  background: var(--firefly-color);
-  box-shadow: 0 0 10px 3px rgba(240, 213, 138, 0.7);
-  animation: firefly-drift 10s ease-in-out infinite;
-}
-
-.fireflies span:nth-child(1) { left: 42%; top: 78%; animation-delay: 0s; }
-.fireflies span:nth-child(2) { left: 60%; top: 84%; animation-delay: -2s; animation-duration: 12s; }
-.fireflies span:nth-child(3) { left: 28%; top: 58%; animation-delay: -4s; }
-.fireflies span:nth-child(4) { left: 74%; top: 70%; animation-delay: -6s; animation-duration: 11s; }
-.fireflies span:nth-child(5) { left: 48%; top: 92%; animation-delay: -3s; }
-.fireflies span:nth-child(6) { left: 14%; top: 80%; animation-delay: -7s; animation-duration: 13s; }
-.fireflies span:nth-child(7) { left: 84%; top: 54%; animation-delay: -5s; }
-.fireflies span:nth-child(8) { left: 36%; top: 66%; animation-delay: -8s; animation-duration: 12s; }
-
-@keyframes firefly-drift {
-  0%   { opacity: 0; transform: translate(0, 0); }
-  20%  { opacity: 1; }
-  50%  { opacity: 0.3; transform: translate(18px, -40px); }
-  80%  { opacity: 1; }
-  100% { opacity: 0; transform: translate(-12px, -90px); }
-}
-
-.gold-dust span {
   width: 3px;
   height: 3px;
-  background: var(--firelight-gold);
-  box-shadow: 0 0 4px rgba(215, 180, 106, 0.8);
-  animation: dust-fall 16s linear infinite;
-}
-
-.gold-dust span:nth-child(1) { left: 12%; top: 10%; animation-delay: 0s; }
-.gold-dust span:nth-child(2) { left: 30%; top: 24%; animation-delay: -3s; }
-.gold-dust span:nth-child(3) { left: 55%; top: 8%;  animation-delay: -6s; }
-.gold-dust span:nth-child(4) { left: 78%; top: 30%; animation-delay: -9s; }
-.gold-dust span:nth-child(5) { left: 22%; top: 46%; animation-delay: -12s; }
-.gold-dust span:nth-child(6) { left: 66%; top: 50%; animation-delay: -2s; }
-.gold-dust span:nth-child(7) { left: 88%; top: 14%; animation-delay: -5s; }
-.gold-dust span:nth-child(8) { left: 44%; top: 36%; animation-delay: -8s; }
-
-@keyframes dust-fall {
-  0%   { opacity: 0; transform: translate(0, 0); }
-  15%  { opacity: 0.8; }
-  85%  { opacity: 0.8; }
-  100% { opacity: 0; transform: translate(24px, 120px); }
-}
-
-/* Snow: gentle flakes falling over the whole screen (winter only).
-   js/season.js creates the flakes and sets each one's size, speed and drift. */
-.snow {
-  inset: 0;
-}
-
-.snow span {
-  position: absolute;
-  top: -10px;
-  left: var(--x);
-  width: var(--size);
-  height: var(--size);
   border-radius: 50%;
-  background: var(--snowflake-color);
-  box-shadow: 0 0 6px 1px var(--snowflake-glow);
-  opacity: var(--flake-opacity);
-  animation: snow-fall var(--dur) linear var(--delay) infinite;
+  background: var(--dust-gold);
+  box-shadow: 0 0 6px 1px var(--glow-soft);
+  opacity: 0;
+  animation: dust-rise var(--d, 20s) var(--ease-calm) var(--delay, 0s) infinite;
+}
+.gold-dust span:nth-child(1) { left: 16%; top: 48%; --dx: 3vw;  --d: 22s; --delay: -3s; }
+.gold-dust span:nth-child(2) { left: 46%; top: 60%; --dx: -2vw; --d: 19s; --delay: -8s; }
+.gold-dust span:nth-child(3) { left: 55%; top: 52%; --dx: 4vw;  --d: 24s; --delay: -12s; }
+.gold-dust span:nth-child(4) { left: 80%; top: 44%; --dx: -3vw; --d: 21s; --delay: -5s; }
+.gold-dust span:nth-child(5) { left: 20%; top: 74%; --dx: 2vw;  --d: 26s; --delay: -15s; }
+.gold-dust span:nth-child(6) { left: 38%; top: 30%; --dx: -4vw; --d: 20s; --delay: -10s; }
+.gold-dust span:nth-child(7) { left: 70%; top: 62%; --dx: 3vw;  --d: 23s; --delay: -1s; }
+.gold-dust span:nth-child(8) { left: 50%; top: 40%; --dx: -2vw; --d: 25s; --delay: -17s; }
+
+@keyframes dust-rise {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  20%  { opacity: 0.9; }
+  100% { transform: translate(var(--dx), -14vh); opacity: 0; }
 }
 
-@keyframes snow-fall {
-  0%   { transform: translate(0, 0); }
-  50%  { transform: translate(calc(var(--drift) * -0.6), 55svh); }
-  100% { transform: translate(var(--drift), 110svh); }
-}
-
-/* Winter: drop the summer lights, the snow takes their place */
-:root[data-season="winter"] .fireflies,
-:root[data-season="winter"] .gold-dust,
-:root[data-season="winter"] .sky-shimmer {
-  display: none;
-}
-
-/* Hover and touch: the lantern-warm lift from the Website Canon */
-.enter-library {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.enter-library:hover,
-.enter-library:focus-visible {
-  transform: translateY(-6px);
-  box-shadow: var(--button-glow);
-}
-
-.enter-library:active {
-  transform: translateY(-2px);
-}
-
-/* Gentle arrival (on the wrappers, so the button's lift still works) */
-@keyframes threshold-fade {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.threshold-header { animation: threshold-fade 1.4s ease-out both; }
-main              { animation: threshold-fade 1.4s ease-out 0.6s both; }
-
-/* Reduced motion: keep the soft static glows, drop everything that moves */
+/* ---------- Reduced motion: keep the light, hold it still ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .threshold-header,
-  main,
-  .lantern,
-  .door-glow,
-  .sky-shimmer,
-  .haze { animation: none; }
-  .enter-library,
-  .door-glow::after { transition: none; }
-  .fireflies,
-  .gold-dust,
-  .snow { display: none; }
+  .sky-shimmer, .haze, .door-glow, .window-glow, .lantern { animation: none; }
+  .fireflies, .gold-dust { display: none; }
 }
