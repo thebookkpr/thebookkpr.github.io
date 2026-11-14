@@ -1,6 +1,10 @@
 /* PROJECT: Book Keeper — Website (The Book Keeper)
-   FILE: css/effects.css · V1.1 · Part 1 of 1
+   FILE: css/effects.css · V1.2 · Part 1 of 1
    LOCATION: thebookkpr.github.io/css/effects.css
+   V1.2: Added the barrel dust ring. scene.js builds the specks (.barrel-speck)
+         inside .barrel-dust every 30 seconds and adds .is-forming. The
+         specks drift in, gather into a circle around the barrel, glow,
+         then drift away (10 seconds in all).
    V1.1: Added pollen, drifting leaves, a moth that crosses the scene
          (.is-flying, set by scene.js), and tap magic (.magic-burst,
          .magic-ring, .magic-spark, created by scene.js).
@@ -11,7 +15,7 @@
 
 /* ---------- Shared: effects never block taps ---------- */
 .sky-shimmer, .haze, .door-glow, .window-glow,
-.lantern, .fireflies, .gold-dust, .pollen, .leaves, .moth {
+.lantern, .fireflies, .gold-dust, .pollen, .leaves, .moth, .barrel-dust {
   position: absolute;
   pointer-events: none;
   z-index: var(--z-effects);
@@ -95,6 +99,71 @@
   78%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.03); }
 }
 
+/* ---------- Barrel dust ring: sits around the flower barrel (V1.2) ----------
+   The circle is centered on the barrel and its flowers. It is empty until
+   scene.js adds specks and .is-forming, every 30 seconds. */
+.barrel-dust {
+  left: 83.5%;
+  top: 68.3%;
+  width: 30%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+}
+
+/* A faint warm ring of light that breathes while the specks gather */
+.barrel-dust::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 62%, var(--glow-soft) 74%, transparent 82%);
+  mix-blend-mode: screen;
+  opacity: 0;
+}
+
+.barrel-dust.is-forming {
+  animation: ring-turn var(--t-ring) var(--ease-calm) forwards;
+}
+.barrel-dust.is-forming::before {
+  animation: ring-glow var(--t-ring) var(--ease-calm) forwards;
+}
+
+.barrel-speck {
+  position: absolute;      /* left and top are set by scene.js, in percent */
+  width: var(--ring-speck-size);
+  height: var(--ring-speck-size);
+  margin: calc(var(--ring-speck-size) / -2) 0 0 calc(var(--ring-speck-size) / -2);
+  border-radius: 50%;
+  background: var(--ring-speck);
+  box-shadow: 0 0 8px 2px var(--ring-glow);
+  opacity: 0;
+}
+.barrel-dust.is-forming .barrel-speck {
+  animation: speck-gather var(--t-ring) var(--ease-calm) var(--delay, 0s) forwards;
+}
+
+/* Drift in from outside, settle into the circle, hold, then rise away */
+@keyframes speck-gather {
+  0%   { transform: translate(var(--sx), var(--sy)) scale(0.4); opacity: 0; }
+  25%  { opacity: 0.9; }
+  48%  { transform: translate(0, 0) scale(1); opacity: 1; }
+  72%  { transform: translate(0, 0) scale(1.15); opacity: 0.85; }
+  100% { transform: translate(calc(var(--sx) * -0.4), -7vh) scale(0.5); opacity: 0; }
+}
+
+/* The whole ring turns very slowly, like a wheel in no hurry */
+@keyframes ring-turn {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(40deg); }
+}
+
+@keyframes ring-glow {
+  0%   { opacity: 0; }
+  45%  { opacity: 0.7; }
+  75%  { opacity: 0.45; }
+  100% { opacity: 0; }
+}
+
 /* ---------- Desktop layout of the lights ---------- */
 @media (min-width: 900px) and (orientation: landscape) {
   .door-glow { left: 68.8%; top: 49.4%; width: 42%; }
@@ -118,6 +187,8 @@
   .lantern-3 { left: 21.5%; top: 62.7%; width: 14%; }
   .lantern-4 { left: 54.5%; top: 47.5%; width: 7%; }
   .lantern-5 { display: block; left: 83%; top: 47%; width: 7%; animation-delay: -4s; }
+
+  .barrel-dust { left: 88%; top: 59%; width: 15%; }
 }
 
 /* ---------- Fireflies: independent, clustering, never UI dots ---------- */
@@ -174,7 +245,7 @@
   100% { transform: translate(var(--dx), -14vh); opacity: 0; }
 }
 
-/* ---------- Pollen: delicate floating, gentle wind (V1.1) ---------- */
+/* ---------- Pollen: delicate floating, gentle wind ---------- */
 .pollen span {
   position: absolute;
   width: 4px;
@@ -204,7 +275,7 @@
   100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
 }
 
-/* ---------- Drifting leaves: slow, swaying, never falling fast (V1.1) ---------- */
+/* ---------- Drifting leaves: slow, swaying, never falling fast ---------- */
 .leaves { inset: 0; overflow: hidden; }
 .leaves span {
   position: absolute;
@@ -231,8 +302,8 @@
   100% { transform: translate(calc(var(--sway) * 0.4), 108vh) rotate(380deg); opacity: 0; }
 }
 
-/* ---------- Moth: one tiny light passing by (V1.1) ----------
-   Resting state is invisible. scene.js adds .is-flying every 20 seconds
+/* ---------- Moth: one tiny light passing by ----------
+   Resting state is invisible. scene.js adds .is-flying every 60 seconds
    and removes it when the crossing ends. */
 .moth {
   left: 0;
@@ -275,7 +346,7 @@
   75%      { transform: translate(7px, 8px) scale(1.1);   opacity: 0.75; }
 }
 
-/* ---------- Tap magic: a soft ring and a few drifting lights (V1.1) ----------
+/* ---------- Tap magic: a soft ring and a few drifting lights ----------
    scene.js creates .magic-burst at the tap point with a ring and sparks,
    setting --dx and --dy on each spark, then removes the burst. */
 .magic-burst {
@@ -322,7 +393,7 @@
 /* ---------- Reduced motion: keep the light, hold it still ---------- */
 @media (prefers-reduced-motion: reduce) {
   .sky-shimmer, .haze, .door-glow, .window-glow, .lantern { animation: none; }
-  .fireflies, .gold-dust, .pollen, .leaves, .moth { display: none; }
+  .fireflies, .gold-dust, .pollen, .leaves, .moth, .barrel-dust { display: none; }
   .magic-spark { display: none; }
   .magic-ring { animation-duration: 0.8s; }
-                           }
+     }
