@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <!-- PROJECT: Book Keeper — Website (The Book Keeper)
-     FILE: index.html · V1.1 · Part 1 of 1
+     FILE: index.html · V1.2 · Part 1 of 1
      LOCATION: thebookkpr.github.io/index.html (repository root)
+     V1.2: Added the flower-barrel hotspot and a bottom note from the
+           Book Keeper (stays open until closed). Corrected the Sound
+           button comment.
      V1.1: Title and lore start hidden (scene.js shows them after
            5 seconds, hides them after 20 seconds or on any tap).
            Added pollen, drifting leaves, a moth, a tap-magic layer,
@@ -23,7 +26,7 @@
   <link rel="stylesheet" href="./css/base.css">
   <link rel="stylesheet" href="./css/effects.css">
 
-  <!-- If scripts are off, the title simply stays visible -->
+  <!-- If scripts are off, the title and the note stay readable -->
   <noscript>
     <style>.threshold-header { opacity: 1; visibility: visible; }</style>
   </noscript>
@@ -80,8 +83,13 @@
         <span></span><span></span><span></span><span></span><span></span>
       </div>
 
-      <!-- A moth passing by (scene.js sends it every 20 seconds) -->
+      <!-- A moth passing by (scene.js sends it every 60 seconds) -->
       <div class="moth" aria-hidden="true"><span></span></div>
+
+      <!-- The flower barrel: tap for a note from the Book Keeper -->
+      <button class="barrel-link" type="button"
+              aria-label="Read a note from the Book Keeper"
+              aria-haspopup="dialog" aria-controls="keeper-note"></button>
 
       <!-- The round green door: tappable -->
       <a class="door-link" href="./stories/"
@@ -100,12 +108,27 @@
     <p class="threshold-lore">The lanterns are lit, and the kettle is still warm.</p>
   </header>
 
-  <!-- Entrance: sits on the path -->
+  <!-- Entrance: sits on the path, leaves 10 seconds after arrival -->
   <main>
     <a class="enter-library" href="./stories/">Enter the Library</a>
   </main>
 
-  <!-- Sound: off until the visitor chooses (audio.js) -->
+  <!-- A note from the Book Keeper: rises from the bottom, stays until closed -->
+  <aside class="keeper-note" id="keeper-note" role="dialog"
+         aria-labelledby="keeper-note-title" aria-hidden="true">
+    <div class="keeper-note-handle" aria-hidden="true"></div>
+    <h2 id="keeper-note-title">A Note from the Book Keeper</h2>
+    <p>Welcome. You have found the place.</p>
+    <p>I keep a small library beneath these roots, where the little stories
+       live: letters, maps, gardens, keepsakes, and quiet adventures. I mend
+       what is worn, and I shelve what is new.</p>
+    <p>If you do not see me, do not worry. Look for the open book, the warm
+       teacup, the lit lantern. I have only just stepped into another room.</p>
+    <p>The round green door is never locked.</p>
+    <button class="keeper-note-close" type="button">Close</button>
+  </aside>
+
+  <!-- Sound: starts softly at the first tap; this button turns it on or off (audio.js) -->
   <button class="sound-toggle" type="button" aria-pressed="false"
           aria-label="Turn sound on">Sound off</button>
 
