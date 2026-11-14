@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <!-- PROJECT: Book Keeper — Website (The Book Keeper)
-     FILE: index.html · V1.3 · Part 1 of 1
+     FILE: index.html · V1.4 · Part 1 of 1
      LOCATION: thebookkpr.github.io/index.html (repository root)
+     V1.4: Added the cellphone landscape painting (20:9),
+           images/thebookkeeper-landscape.jpg. It is used on landscape
+           screens at least twice as wide as tall, ahead of the desktop
+           painting. css/base.css and css/effects.css use the same rule.
      V1.3: The Sound switch now lives inside a menu (a brass medallion
            at the bottom right). Added the barrel dust ring container
            (scene.js fills it with specks every 30 seconds).
@@ -43,8 +47,12 @@
   <div class="scene">
     <div class="scene-art">
 
-      <!-- Painting: mobile by default, desktop on wide screens -->
+      <!-- Painting: mobile by default, 20:9 on very wide landscape screens
+           (phones turned sideways), desktop on other wide screens.
+           The first matching source wins, so the order matters. -->
       <picture>
+        <source media="(orientation: landscape) and (min-aspect-ratio: 2/1)"
+                srcset="./images/thebookkeeper-landscape.jpg">
         <source media="(min-width: 900px) and (orientation: landscape)"
                 srcset="./images/thebookkeeper-desktop.jpg">
         <img class="scene-img"
